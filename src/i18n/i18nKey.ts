@@ -352,6 +352,38 @@ enum I18nKey {
 	lightDarkMode = "lightDarkMode",
 	resetToDefault = "resetToDefault",
 	goToAboutPage = "goToAboutPage",
+
+	// 页脚版权行（原先硬编码在 FooterBar.astro）
+	footerCopyright = "footerCopyright",
+	footerPoweredBy = "footerPoweredBy",
+	footerVersion = "footerVersion",
+	footerSitemap = "footerSitemap",
+
+	// 组件内硬编码文案补齐（头像 alt、标签/分类链接、复制代码、精选徽标、订阅指南、搜索假结果）
+	profileAvatarAlt = "profileAvatarAlt",
+	tagViewAll = "tagViewAll",
+	categoryViewAll = "categoryViewAll",
+	codeCopy = "codeCopy",
+	timelineFeatured = "timelineFeatured",
+	// 时间线分类标签（配置项 timelineConfig.categories[].label 用 $t: 引用）
+	timelineMilestone = "timelineMilestone",
+	timelineProject = "timelineProject",
+	timelineCareer = "timelineCareer",
+	timelineEducation = "timelineEducation",
+	timelineLife = "timelineLife",
+	feedGuideWeb = "feedGuideWeb",
+	feedGuideApps = "feedGuideApps",
+	searchDevFakeTitle = "searchDevFakeTitle",
+	searchDevFakeExcerpt = "searchDevFakeExcerpt",
+	searchDevTestTitle = "searchDevTestTitle",
+	searchDevTestHint = "searchDevTestHint",
+
+	// 站点线路切换（国内站 / 国际站）
+	regionSwitch = "regionSwitch",
+	regionChina = "regionChina",
+	regionInternational = "regionInternational",
+	regionSwitchTo = "regionSwitchTo",
+	regionSwitchHint = "regionSwitchHint",
 }
 
 export default I18nKey;

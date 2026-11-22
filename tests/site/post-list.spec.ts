@@ -21,12 +21,12 @@ test.describe("文章列表布局模式", () => {
 		await page.goto("/");
 		const firstCard = page.locator(".m3-blog-postcard").first();
 		await expect(firstCard.locator(".m3-blog-postcard__title")).toContainText(
-			"Shirone Authoring & Usage Guide",
+			"Shirone 写作与使用指南",
 		);
 		await expect(firstCard.locator(".m3-blog-postcard__pin svg")).toBeVisible();
 		await expect(firstCard.locator(".m3-blog-postcard__title")).toHaveAttribute(
 			"aria-label",
-			/Shirone Authoring & Usage Guide, Pinned/,
+			/Shirone 写作与使用指南, 置顶/,
 		);
 	});
 
@@ -67,7 +67,7 @@ test.describe("文章列表布局模式", () => {
 		await page.locator("#display-settings-switch").click();
 		// DisplaySettings 为 client:only 岛，等水合产物出现；radio 被
 		// 标签遮挡，点击可见段标签（真实用户路径）
-		const gridLabel = page.locator("#display-setting").getByText("Grid");
+		const gridLabel = page.locator("#display-setting").getByText("网格");
 		await gridLabel.waitFor({ state: "visible", timeout: 10_000 });
 		await gridLabel.click();
 		await expect(page.locator("#post-list")).toHaveClass(/m3e-post-list--grid/);
@@ -149,7 +149,7 @@ test.describe("文章列表布局模式", () => {
 			{ timeout: 15_000 },
 		);
 		await page.locator("#display-settings-switch").click();
-		const gridLabel = page.locator("#display-setting").getByText("Grid");
+		const gridLabel = page.locator("#display-setting").getByText("网格");
 		await gridLabel.waitFor({ state: "visible", timeout: 10_000 });
 		await gridLabel.click();
 		await expect(page.locator("#post-list")).toHaveClass(/m3e-post-list--grid/);

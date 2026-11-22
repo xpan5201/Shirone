@@ -32,7 +32,7 @@ test.describe("番剧页", () => {
 			"Lycoris Recoil",
 		);
 		// 状态 tonal pill（i18n 文案 + 语义色注入）
-		await expect(first.locator(".anime-card__status")).toHaveText("Completed");
+		await expect(first.locator(".anime-card__status")).toHaveText("看完");
 		await expect(first.locator(".anime-card__status")).toHaveCSS(
 			"color",
 			/rgb\(|var\(--tertiary\)/,
@@ -72,7 +72,7 @@ test.describe("番剧页", () => {
 		page,
 	}) => {
 		await expect(page.locator(".page-header")).toHaveCount(1);
-		await expect(page.locator(".page-header__title")).toHaveText("Anime");
+		await expect(page.locator(".page-header__title")).toHaveText("番剧");
 		await expect(page.locator(".page-header__icon svg")).toHaveCount(1);
 		// 官方 Chips 原子（filter 形态 + 状态前置图标），只列数据中出现的状态
 		const chips = page.locator(".anime-section__chips .m3-chip--filter");
@@ -84,7 +84,7 @@ test.describe("番剧页", () => {
 		page,
 	}) => {
 		const watchingChip = page.getByRole("button", {
-			name: "Watching",
+			name: "在看",
 			exact: true,
 		});
 		await watchingChip.click();
@@ -102,7 +102,7 @@ test.describe("番剧页", () => {
 	test("深链恢复筛选（?status=completed）与空态", async ({ page }) => {
 		await page.goto("/anime/?status=completed");
 		const completedChip = page.getByRole("button", {
-			name: "Completed",
+			name: "看完",
 			exact: true,
 		});
 		await expect(completedChip).toHaveAttribute("aria-pressed", "true");
@@ -114,12 +114,12 @@ test.describe("番剧页", () => {
 		await page.goto("/anime/?status=nonsense");
 		await expect(page.locator(".anime-section__empty")).toBeVisible();
 		await expect(page.locator(".anime-section__empty")).toContainText(
-			"No anime matched your filter",
+			"没有符合条件的番剧",
 		);
 	});
 
 	test("本地状态筛选立即揭幕，不伪造网络等待", async ({ page }) => {
-		await page.getByRole("button", { name: "Planned", exact: true }).click();
+		await page.getByRole("button", { name: "想看", exact: true }).click();
 		await expect(page.locator(".anime-card")).toHaveCount(1);
 		await expect(page.locator(".anime-card__title")).toHaveText(
 			"Is the Order a Rabbit?",
@@ -170,10 +170,10 @@ test.describe("番剧页", () => {
 		page,
 	}) => {
 		const listBtn = page.locator(
-			'.anime-section__layout-btn[aria-label="List"]',
+			'.anime-section__layout-btn[aria-label="列表"]',
 		);
 		const gridBtn = page.locator(
-			'.anime-section__layout-btn[aria-label="Grid"]',
+			'.anime-section__layout-btn[aria-label="网格"]',
 		);
 
 		// 默认 grid 海报网格

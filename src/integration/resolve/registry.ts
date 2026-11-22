@@ -183,8 +183,9 @@ export function buildOverrideRegistry(
 			const rel = relative(target.packageDir, abs);
 			// `index.ts` barrels stay owned by the package: overriding one would
 			// break the named-export contract the theme relies on. Matched at any
-			// depth, not just the directory root.
-			if (BARREL_RE.test(rel)) continue;
+			// depth, not just the directory root. Windows returns `\` from
+			// `relative()`, so compare on a POSIX-normalised copy.
+			if (BARREL_RE.test(rel.replace(/\\/g, "/"))) continue;
 
 			const hit = probe(join(target.userDir, rel), target.extensions);
 			if (hit) {

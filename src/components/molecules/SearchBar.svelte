@@ -52,7 +52,7 @@ const handleFocus = (): void => {
 <div class="hidden lg:block relative w-10 h-10 shrink-0">
     <div
         class="m3-state-layer absolute right-0 top-0 flex items-center overflow-hidden rounded-full h-10 top-app-bar__search-shell
-               {expanded ? 'top-app-bar__search-shell--expanded w-48 bg-(--surface-container-high)' : 'w-10 bg-transparent'}"
+               {expanded ? 'top-app-bar__search-shell--expanded z-20 w-48 bg-(--surface-container-high)' : 'w-10 bg-transparent'}"
         style="transition: width var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate), background-color var(--m3e-duration-short) var(--m3e-easing-standard);"
         onclick={() => {
             if (!expanded) expand();

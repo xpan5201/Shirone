@@ -33,7 +33,7 @@ function visit(node) {
 }
 
 function isBareTextDirective(node) {
-	if (!node || node.type !== "textDirective") return false;
+	if (node?.type !== "textDirective") return false;
 	if ((node.children?.length ?? 0) > 0) return false;
 	return Object.keys(node.attributes ?? {}).length === 0;
 }

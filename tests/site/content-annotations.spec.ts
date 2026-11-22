@@ -31,7 +31,7 @@ test.describe("Markdown content annotations", () => {
 		await trigger.click();
 		await expect(popover).toBeVisible();
 		await expect(
-			popover.getByText("An island is an interactive"),
+			popover.getByText("岛屿是由静态 HTML 包围的交互式 UI 组件"),
 		).toBeVisible();
 
 		const geometry = await popover.evaluate((element) => {

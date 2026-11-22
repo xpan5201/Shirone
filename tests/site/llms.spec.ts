@@ -52,9 +52,9 @@ test.describe("LLMs.txt & AI-friendly Content Endpoints", () => {
 		expect(text).toContain("# Shirone - Full Content Archive");
 
 		// 验证公开文章包含完整正文内容
-		expect(text).toContain("## Shirone Markdown Enhancements");
-		expect(text).toContain("## File Trees");
-		expect(text).toContain("File Trees turn multi-level project structures");
+		expect(text).toContain("## Shirone Markdown 扩展功能");
+		expect(text).toContain("## 文件树");
+		expect(text).toContain("文件树把多层项目结构");
 
 		// 严格安全隔离验证：密码保护文章的密钥与正文绝对不存在
 		expect(text).not.toContain("Encrypted Post Demo");

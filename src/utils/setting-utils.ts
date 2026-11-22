@@ -11,6 +11,7 @@ import {
 	WALLPAPER_MODE_CHANGE_EVENT,
 	WALLPAPER_MODE_KEY,
 } from "@constants/constants.ts";
+import { EASING_EMPHASIZED, prefersReducedMotion } from "@utils/motion";
 import { applyCurrentScheme } from "@utils/theme-utils";
 import { expressiveCodeConfig, siteConfig } from "@/config";
 import type { LIGHT_DARK_MODE, WallpaperMode } from "@/types/config";
@@ -129,6 +130,55 @@ export function setHue(hue: number): void {
 	applyCurrentScheme();
 }
 
+export type ThemeTransitionOrigin = {
+	x: number;
+	y: number;
+};
+
+type ViewTransitionLike = {
+	ready: Promise<void>;
+	finished: Promise<void>;
+};
+
+type DocumentWithViewTransition = Document & {
+	startViewTransition?: (callback: () => void) => ViewTransitionLike;
+};
+
+let themeTransitionSeq = 0;
+
+/** 根据主题模式与系统偏好计算最终是否处于暗色模式。 */
+export function resolveIsDark(theme: LIGHT_DARK_MODE): boolean {
+	if (theme === DARK_MODE) return true;
+	if (theme === LIGHT_MODE) return false;
+	return (
+		typeof window !== "undefined" &&
+		window.matchMedia("(prefers-color-scheme: dark)").matches
+	);
+}
+
+/** 从点击事件或锚点元素推导圆形扩散起点；键盘操作自动回退至控件中心。 */
+export function resolveTransitionOrigin(
+	event?: MouseEvent | PointerEvent | null,
+	anchor?: HTMLElement | null,
+): ThemeTransitionOrigin {
+	if (event && (event.clientX !== 0 || event.clientY !== 0)) {
+		return { x: event.clientX, y: event.clientY };
+	}
+	if (anchor) {
+		const rect = anchor.getBoundingClientRect();
+		if (rect.width > 0 || rect.height > 0) {
+			return {
+				x: rect.left + rect.width / 2,
+				y: rect.top + rect.height / 2,
+			};
+		}
+	}
+	if (typeof window !== "undefined") {
+		return { x: window.innerWidth - 36, y: 32 };
+	}
+	return { x: 0, y: 0 };
+}
+
 export function applyThemeToDocument(theme: LIGHT_DARK_MODE): void {
 	switch (theme) {
 		case LIGHT_MODE:
@@ -156,9 +206,9 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE): void {
 			: (expressiveCodeConfig.lightTheme ?? expressiveCodeConfig.theme),
 	);
 
-	// 广播明暗状态变化，供按需加载的第三方组件（如 giscus iframe）同步主题
+	// 广播明暗状态与模式变化，供按需加载的第三方组件（如 giscus）及顶栏/显示设置同步
 	window.dispatchEvent(
-		new CustomEvent(THEME_CHANGE_EVENT, { detail: { isDark } }),
+		new CustomEvent(THEME_CHANGE_EVENT, { detail: { isDark, mode: theme } }),
 	);
 
 	// Dark mode affects the resolved M3/M3E scheme
@@ -168,6 +218,97 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE): void {
 export function setTheme(theme: LIGHT_DARK_MODE): void {
 	localStorage.setItem("theme", theme);
 	applyThemeToDocument(theme);
+}
+
+/**
+ * 同步无撕裂切换主题：支持原生 View Transitions 时从触发点圆形扩散展开，
+ * 减弱动效或旧浏览器下通过瞬时归零动效令牌确保卡片与背景同帧瞬切。
+ */
+export function setThemeWithTransition(
+	theme: LIGHT_DARK_MODE,
+	origin?: ThemeTransitionOrigin,
+): void {
+	const root = document.documentElement;
+	const wasDark = root.classList.contains("dark");
+	const nextDark = resolveIsDark(theme);
+
+	// 视觉明暗未变化（如亮色切至同为亮色的「跟随系统」）时仅落库并同步状态
+	if (wasDark === nextDark) {
+		setTheme(theme);
+		return;
+	}
+
+	const seq = ++themeTransitionSeq;
+	const doc = document as DocumentWithViewTransition;
+	const startViewTransition = doc.startViewTransition;
+	const canViewTransition =
+		typeof startViewTransition === "function" && !prefersReducedMotion();
+
+	const applyInstantSync = (): void => {
+		root.classList.add("theme-switching");
+		setTheme(theme);
+		void root.offsetWidth;
+		requestAnimationFrame(() => {
+			requestAnimationFrame(() => {
+				if (seq === themeTransitionSeq) {
+					root.classList.remove("theme-switching");
+				}
+			});
+		});
+	};
+
+	if (!canViewTransition) {
+		applyInstantSync();
+		return;
+	}
+
+	const pt = origin ?? resolveTransitionOrigin();
+	const endRadius = Math.hypot(
+		Math.max(pt.x, window.innerWidth - pt.x),
+		Math.max(pt.y, window.innerHeight - pt.y),
+	);
+
+	root.classList.add("theme-switching");
+	let transition: ViewTransitionLike;
+	try {
+		transition = startViewTransition.call(doc, () => {
+			setTheme(theme);
+		});
+	} catch {
+		applyInstantSync();
+		return;
+	}
+
+	transition.ready
+		.then(() => {
+			if (seq !== themeTransitionSeq) return;
+			root.animate(
+				{
+					clipPath: [
+						`circle(0px at ${pt.x}px ${pt.y}px)`,
+						`circle(${endRadius}px at ${pt.x}px ${pt.y}px)`,
+					],
+				},
+				{
+					duration: 620,
+					easing: EASING_EMPHASIZED,
+					pseudoElement: "::view-transition-new(root)",
+				},
+			);
+		})
+		.catch(() => {
+			// 连点打断前一次过渡会触发 AbortError，安全忽略
+		});
+
+	transition.finished
+		.catch(() => {
+			// 同上
+		})
+		.finally(() => {
+			if (seq === themeTransitionSeq) {
+				root.classList.remove("theme-switching");
+			}
+		});
 }
 
 export function getStoredTheme(): LIGHT_DARK_MODE {

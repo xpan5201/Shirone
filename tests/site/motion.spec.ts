@@ -82,12 +82,12 @@ test.describe("Site motion", () => {
 		).toBe(0);
 
 		await page
-			.getByRole("group", { name: "Group archive by" })
-			.getByText("By Category", { exact: true })
+			.getByRole("group", { name: "归档分组" })
+			.getByText("按分类", { exact: true })
 			.click();
 		await expect(page.locator(".m3-blog-archive__group-title")).toHaveText([
-			"Examples",
-			"Guides",
+			"示例",
+			"指南",
 		]);
 		expect(
 			await page.evaluate(
@@ -294,7 +294,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 	) {
 		return page.evaluate(() => {
 			const row = [...document.querySelectorAll(".m3-site-stats__row")].find(
-				(element) => element.textContent?.includes("Tags"),
+				(element) => element.textContent?.includes("标签"),
 			);
 			const icon = row?.querySelector("svg");
 			return !!icon?.querySelector("path");
@@ -342,7 +342,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 		}
 		// swup 点击文章卡链接 → 文章页：退场淡出（150ms）后 hidden
 		await clickLink(page, '#swup-container a[href^="/posts/"]');
-		await waitCurrentPage(page, "post");
+		await waitCurrentPage(page, "篇文章");
 		await waitStatsHidden(page, true);
 		await expect(page.locator("#toc")).toHaveCSS("overflow-y", "auto");
 
@@ -381,7 +381,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 		expect(await statsWrapperHidden(page)).toBe(false);
 
 		await clickLink(page, '#swup-container a[href^="/posts/"]');
-		await waitCurrentPage(page, "post");
+		await waitCurrentPage(page, "篇文章");
 		await page.waitForFunction(() => {
 			const wrapper = document
 				.querySelector('widget-layout[data-id="site-stats"]')
@@ -412,7 +412,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 		await page.goto("/", { waitUntil: "networkidle" });
 
 		await clickLink(page, '#swup-container a[href^="/posts/"]');
-		await waitCurrentPage(page, "post");
+		await waitCurrentPage(page, "篇文章");
 		// 瞬切路径：无 150ms 淡出等待，hidden 立即出现
 		await waitStatsHidden(page, true);
 	});

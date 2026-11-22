@@ -73,7 +73,7 @@ if (typeof avatarAsset !== "string") {
 			height={avatarHeight}
 			loading={priority ? "eager" : "lazy"}
 			fetchPriority={priority ? "high" : undefined}
-            alt="Profile Image of the Author"
+            alt={i18n(I18nKey.profileAvatarAlt)}
             size={176}
             shape="rounded"
             class="mx-auto lg:!w-full"

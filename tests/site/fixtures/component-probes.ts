@@ -34,9 +34,9 @@ export function mountCalendarProbe(target: HTMLElement, locale: string) {
 			startOfWeek: "mon",
 			postsByDate: {},
 			activeMonths: [],
-			backTodayLabel: "Back to today",
-			prevMonthLabel: "Previous month",
-			nextMonthLabel: "Next month",
+			backTodayLabel: "回到今天",
+			prevMonthLabel: "上一月",
+			nextMonthLabel: "下一月",
 		},
 	});
 }

@@ -800,18 +800,18 @@ test.describe("Markdown syntax runtime loading", () => {
 		await page.waitForURL(`**${CODE_POST_PATH}`);
 		const toggle = page.locator(".collapse-toggle-btn").first();
 		await expect(toggle).toBeVisible();
-		await expect(toggle).toHaveAttribute("aria-label", "Expand code block");
+		await expect(toggle).toHaveAttribute("aria-label", "展开代码块");
 		await expect(toggle.locator("svg")).toHaveCSS("transform", "none");
 
 		await toggle.click();
-		await expect(toggle).toHaveAttribute("aria-label", "Collapse code block");
+		await expect(toggle).toHaveAttribute("aria-label", "折叠代码块");
 		await expect(toggle.locator("svg")).toHaveCSS(
 			"transform",
 			"matrix(-1, 0, 0, -1, 0, 0)",
 		);
 
 		await toggle.click();
-		await expect(toggle).toHaveAttribute("aria-label", "Expand code block");
+		await expect(toggle).toHaveAttribute("aria-label", "展开代码块");
 		await expect(toggle.locator("svg")).toHaveCSS("transform", "none");
 
 		expect(

@@ -15,15 +15,15 @@ import { timelineConfig } from "../../src/config/timelineConfig";
  * 关闭的功能页面会重定向 `/404/`，导航入口必须一并消失，因此这里按开关断言。
  */
 const featureRoutes: Array<[string, boolean, string]> = [
-	["friends", friendsConfig.enable, "/friends/"],
-	["moments", momentsConfig.enable, "/moments/"],
-	["anime", animeConfig.enable, "/anime/"],
+	["个友链", friendsConfig.enable, "/friends/"],
+	["条动态", momentsConfig.enable, "/moments/"],
+	["部番剧", animeConfig.enable, "/anime/"],
 	["compass", compassConfig.enable, "/compass/"],
-	["albums", albumsConfig.enable, "/albums/"],
+	["个相册", albumsConfig.enable, "/albums/"],
 	["timeline", timelineConfig.enable, "/timeline/"],
-	["projects", projectsConfig.enable, "/projects/"],
-	["devices", devicesConfig.enable, "/devices/"],
-	["skills", skillsConfig.enable, "/skills/"],
+	["个项目", projectsConfig.enable, "/projects/"],
+	["款设备", devicesConfig.enable, "/devices/"],
+	["项技能", skillsConfig.enable, "/skills/"],
 	["about", aboutConfig.enable, "/about/"],
 ];
 
@@ -37,7 +37,7 @@ test.describe("top app bar content alignment", () => {
 		const title = content.locator(":scope > a");
 		const nav = content.locator(":scope > nav");
 
-		await expect(title).toHaveText("Shirone");
+		await expect(title).toHaveText("优纪互联");
 		await expect(title).not.toHaveClass(/lg:absolute/);
 		await expect(nav).toBeVisible();
 		await expect(nav).toHaveClass(/lg:absolute/);

@@ -18,6 +18,12 @@ const pageDescription = resolveI18nText(
 );
 
 const items = resolveTimelineData(timelineConfig);
+
+// 分类标签同样支持 `$t:<key>` 引用，在这里统一解析成当前语言文案。
+const categories = timelineConfig.categories.map((category) => ({
+	...category,
+	label: resolveI18nText(category.label),
+}));
 ---
 
 <MainGridLayout
@@ -26,7 +32,7 @@ const items = resolveTimelineData(timelineConfig);
 	page="timeline"
 >
 	<TimelineSection
-		categories={timelineConfig.categories}
+		categories={categories}
 		items={items}
 		title={pageTitle}
 		subtitle={pageDescription}

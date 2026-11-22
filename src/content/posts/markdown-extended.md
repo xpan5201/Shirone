@@ -1,29 +1,29 @@
 ---
-title: Markdown Extended Features
+title: Markdown 扩展特性
 published: 2024-05-01
 updated: 2024-11-29
-description: 'Read more about Markdown features in Fuwari'
+description: '进一步了解 Fuwari 中的 Markdown 功能'
 image: ''
-tags: [Demo, Example, Markdown, Fuwari]
+tags: [演示, 示例, Markdown, Fuwari]
 series: markdown-syntax-guide
 seriesOrder: 2
 draft: false 
 ---
 
-## GitHub Repository Cards
-You can add dynamic cards that link to GitHub repositories, on page load, the repository information is pulled from the GitHub API. 
+## GitHub 仓库卡片
+你可以添加链接到 GitHub 仓库的动态卡片，页面加载时，仓库信息会从 GitHub API 拉取。 
 
 ::github{repo="Fabrizz/MMM-OnSpotify"}
 
-Create a GitHub repository card with the code `::github{repo="<owner>/<repo>"}`.
+用 `::github{repo="<owner>/<repo>"}` 这段代码创建一个 GitHub 仓库卡片。
 
 ```markdown
 ::github{repo="saicaca/fuwari"}
 ```
 
-## Mermaid Diagrams
+## Mermaid 图表
 
-Fenced `mermaid` blocks are rendered as diagrams and follow the active color scheme.
+围栏 `mermaid` 代码块会渲染为图表，并跟随当前配色方案。
 
 ```mermaid
 flowchart LR
@@ -34,31 +34,31 @@ flowchart LR
     C --> D[Themed diagram]
 ```
 
-## Admonitions
+## 提示块
 
-Following types of admonitions are supported: `note` `tip` `important` `warning` `caution`
+支持以下提示块类型：`note` `tip` `important` `warning` `caution`
 
 :::note
-Highlights information that users should take into account, even when skimming.
+突出显示用户即使快速浏览也应当留意的信息。
 :::
 
 :::tip
-Optional information to help a user be more successful.
+可选信息，帮助用户更顺利地完成任务。
 :::
 
 :::important
-Crucial information necessary for users to succeed.
+用户完成任务所必需的关键信息。
 :::
 
 :::warning
-Critical content demanding immediate user attention due to potential risks.
+因存在潜在风险而需要用户立即关注的重要内容。
 :::
 
 :::caution
-Negative potential consequences of an action.
+某项操作可能带来的负面后果。
 :::
 
-### Basic Syntax
+### 基本语法
 
 ```markdown
 :::note
@@ -70,12 +70,12 @@ Optional information to help a user be more successful.
 :::
 ```
 
-### Custom Titles
+### 自定义标题
 
-The title of the admonition can be customized.
+提示块的标题可以自定义。
 
-:::note[MY CUSTOM TITLE]
-This is a note with a custom title.
+:::note[自定义标题]
+这是一个带自定义标题的提示块。
 :::
 
 ```markdown
@@ -84,10 +84,10 @@ This is a note with a custom title.
 :::
 ```
 
-### GitHub Syntax
+### GitHub 语法
 
 > [!TIP]
-> [The GitHub syntax](https://github.com/orgs/community/discussions/16925) is also supported.
+> [GitHub 语法](https://github.com/orgs/community/discussions/16925)同样受支持。
 
 ```
 > [!NOTE]
@@ -97,29 +97,29 @@ This is a note with a custom title.
 > The GitHub syntax is also supported.
 ```
 
-### Spoiler
+### 剧透
 
-You can add spoilers to your text. The text also supports **Markdown** syntax.
+你可以为文字添加剧透。剧透文字同样支持 **Markdown** 语法。
 
-The content :spoiler[is hidden **ayyy**]!
+这段内容 :spoiler[被隐藏了 **ayyy**]！
 
 ```markdown
 The content :spoiler[is hidden **ayyy**]!
 
 ```
 
-## Image Widths and Captions
+## 图片宽度与题注
 
-A standalone image accepts an optional `w-N%` width token in its alt text and a Markdown title rendered as a centered caption below the image:
+独立图片可以在 alt 文本中使用可选的 `w-N%` 宽度标记，并用 Markdown 标题渲染为图片下方的居中题注：
 
-![Album example image w-50%](/images/albums/AcgExample/07.webp "Half-width image with a caption")
+![专辑示例图片 w-50%](/images/albums/AcgExample/07.webp "带题注的半宽图片")
 
 ```markdown
 ![Image description w-50%](./image.webp "Visible caption")
 ```
 
-Valid widths range from `w-1%` to `w-100%`; invalid tokens stay in the alt text. The width and the caption are independent — a title alone also produces a caption:
+有效宽度从 `w-1%` 到 `w-100%`；无效标记会留在 alt 文本中。宽度与题注彼此独立，只写标题同样会生成题注：
 
-![Album example image w-75%](/images/albums/AcgExample/08.webp)
+![专辑示例图片 w-75%](/images/albums/AcgExample/08.webp)
 
-![Album example image](/images/albums/AcgExample/09.webp "Caption without a width token")
+![专辑示例图片](/images/albums/AcgExample/09.webp "不带宽度标记的题注")

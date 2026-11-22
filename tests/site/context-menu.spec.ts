@@ -115,7 +115,7 @@ test.describe("desktop context menu", () => {
 		).toBeVisible();
 		await expect(
 			menu.locator('[data-context-menu-action="sharePageLink"]'),
-		).toContainText("Copy link");
+		).toContainText("复制链接");
 		await expect(
 			menu.locator('[data-context-menu-action="sharePageLink"] svg'),
 		).toBeVisible();
@@ -173,7 +173,7 @@ test.describe("desktop context menu", () => {
 			.toBe(await page.evaluate(() => window.location.href));
 		await expect(page.locator(".m3-snackbar")).toHaveClass(/visible/);
 		await expect(page.locator(".m3-snackbar")).toContainText(
-			"Copied to clipboard",
+			"已复制到剪贴板",
 		);
 		expect(
 			await page.evaluate(

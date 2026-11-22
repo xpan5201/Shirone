@@ -50,7 +50,7 @@ test.describe("文章内系列块", () => {
 
 			// 系列名是二级标题里的链接（与 Continue reading 同级）
 			const heading = card.getByRole("heading", { level: 2 });
-			await expect(heading).toHaveText("Markdown Syntax Guide");
+			await expect(heading).toHaveText("Markdown 语法指南");
 			await expect(heading.getByRole("link")).toHaveAttribute(
 				"href",
 				"/series/markdown-syntax-guide/",
@@ -58,7 +58,7 @@ test.describe("文章内系列块", () => {
 
 			// 篇号 + 说明
 			await expect(card).toContainText("Part 2 of 3");
-			await expect(card).toContainText("This post is part of the series");
+			await expect(card).toContainText("本文属于系列");
 
 			// 名称次序保持可见内容在前，方向上下文作为末尾说明
 			const prev = card.locator(".series-card__row--prev");
@@ -158,9 +158,9 @@ test.describe("文章内系列块", () => {
 test("系列详情页按 seriesOrder 排序并标注篇号", async ({ page }) => {
 	await openSitePage(page, DETAIL);
 	await expect(page.locator(".series-detail__title")).toHaveText([
-		"Markdown Example",
-		"Markdown Extended Features",
-		"Shirone Markdown Enhancements",
+		"Markdown 示例",
+		"Markdown 扩展特性",
+		"Shirone Markdown 扩展功能",
 	]);
 	await expect(page.locator(".series-detail__index")).toHaveText([
 		"01",
@@ -172,12 +172,12 @@ test("系列详情页按 seriesOrder 排序并标注篇号", async ({ page }) =>
 test("系列索引页给出状态、篇数与默认分类", async ({ page }) => {
 	await openSitePage(page, "/series/");
 	await expect(page.locator(".series-index__title")).toHaveText([
-		"Media Embeds",
-		"Markdown Syntax Guide",
+		"媒体嵌入",
+		"Markdown 语法指南",
 	]);
 	await expect(page.locator(".series-index__status")).toHaveText([
-		"Ongoing",
-		"Completed",
+		"连载中",
+		"看完",
 	]);
 	await expect(page.locator(".series-index__card").first()).toContainText(
 		"2 posts",

@@ -62,7 +62,7 @@ const markerIcon = $derived(
 			{#if item.featured}
 				<span class="timeline-card__featured-pill">
 					<Icon icon="material-symbols:star-rounded" aria-hidden="true" />
-					<span>Featured</span>
+					<span>{i18n(I18nKey.timelineFeatured)}</span>
 				</span>
 			{/if}
 		</div>

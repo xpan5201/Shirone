@@ -4,6 +4,13 @@ import PanelStack from "@components/atoms/display/PanelStack.svelte";
 import SegmentedButton from "@components/atoms/selection/SegmentedButton.svelte";
 import Slider from "@components/atoms/selection/Slider.svelte";
 import Switch from "@components/atoms/selection/Switch.svelte";
+import {
+	AUTO_MODE,
+	DARK_MODE,
+	DEFAULT_THEME,
+	LIGHT_MODE,
+	THEME_CHANGE_EVENT,
+} from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
@@ -29,12 +36,16 @@ import {
 	getMotionPreference,
 	getStoredTextureOpacity,
 	getStoredTexturePreset,
+	getStoredTheme,
 	getStoredWallpaperMode,
+	resolveTransitionOrigin,
 	setHue,
 	setMotionPreference,
 	setTextureOpacity,
 	setTexturePreset,
+	setThemeWithTransition,
 	setWallpaperMode,
+	type ThemeTransitionOrigin,
 } from "@utils/setting-utils";
 import { getSpec, getStyle, setSpec, setStyle } from "@utils/theme-utils";
 import { onMount } from "svelte";
@@ -44,7 +55,7 @@ import {
 	resolveDisplaySettings,
 	siteConfig,
 } from "@/config";
-import type { WallpaperMode } from "@/types/config";
+import type { LIGHT_DARK_MODE, WallpaperMode } from "@/types/config";
 import type { PostListMode } from "@/types/postListConfig";
 import type { TexturePreset } from "@/types/textureConfig";
 
@@ -62,10 +73,15 @@ let dark = $state(
 	typeof document !== "undefined" &&
 		document.documentElement.classList.contains("dark"),
 );
+const initialThemeMode = getStoredTheme();
+let themeMode = $state<LIGHT_DARK_MODE>(initialThemeMode);
+let lastAppliedThemeMode: LIGHT_DARK_MODE = initialThemeMode;
+let themeControlEl: HTMLDivElement | undefined = $state();
+let lastThemeClickOrigin: ThemeTransitionOrigin | undefined;
 
 let motionReduced = $state(false);
-// 九宫格色卡在面板首次打开前不计算（9 次配色解算只在用户真正查看时发生）
-let panelOpened = $state(false);
+// 仅在面板处于真实打开态时才计算九宫格 9 套 HCT 配色，避免面板关闭时切明暗在后台同步重算造成卡顿
+let panelOpen = $state(false);
 
 // 文章列表布局（list/grid）：初始值取访客偏好，变化时存储 + FLIP 重排
 const defaultLayoutMode = defaultMode();
@@ -119,37 +135,50 @@ const textureOptions: {
 	},
 ];
 
-// 明暗切换时重算色卡（LightDarkSwitch 改 <html> 的 class）
+// 监听主题切换事件同步面板状态，并实时跟踪面板开合（关闭时停止后台 HCT 重算）
 onMount(() => {
-	const observer = new MutationObserver(() => {
-		dark = document.documentElement.classList.contains("dark");
-	});
-	observer.observe(document.documentElement, {
-		attributes: true,
-		attributeFilter: ["class"],
-	});
+	const onThemeChange = (event: Event): void => {
+		const detail = (
+			event as CustomEvent<{ isDark?: boolean; mode?: LIGHT_DARK_MODE }>
+		).detail;
+		dark =
+			typeof detail?.isDark === "boolean"
+				? detail.isDark
+				: document.documentElement.classList.contains("dark");
+		const nextMode = detail?.mode ?? getStoredTheme();
+		lastAppliedThemeMode = nextMode;
+		themeMode = nextMode;
+	};
+	window.addEventListener(THEME_CHANGE_EVENT, onThemeChange);
+	const onThemePointerDown = (event: PointerEvent): void => {
+		lastThemeClickOrigin = resolveTransitionOrigin(event, themeControlEl);
+	};
+	themeControlEl?.addEventListener("pointerdown", onThemePointerDown);
 	motionReduced = getMotionPreference();
 	const panel = document.getElementById("display-setting");
-	const panelObserver = new MutationObserver(() => {
-		if (panel?.classList.contains("float-panel-closed")) return;
-		panelOpened = true;
-		panelObserver.disconnect();
-	});
-	if (panel && !panel.classList.contains("float-panel-closed"))
-		panelOpened = true;
-	else if (panel)
+	const syncPanelOpen = (): void => {
+		panelOpen = Boolean(
+			panel && !panel.classList.contains("float-panel-closed"),
+		);
+	};
+	const panelObserver = new MutationObserver(syncPanelOpen);
+	syncPanelOpen();
+	if (panel) {
 		panelObserver.observe(panel, {
 			attributes: true,
 			attributeFilter: ["class"],
 		});
+	}
 	return () => {
-		observer.disconnect();
+		window.removeEventListener(THEME_CHANGE_EVENT, onThemeChange);
+		themeControlEl?.removeEventListener("pointerdown", onThemePointerDown);
 		panelObserver.disconnect();
 	};
 });
 
-/** 完整重置：色相 / 配色风格 / Color Spec / 列表布局 / 背景纹理 全部还原为站点默认（点击即生效，无确认弹窗） */
+/** 完整重置：主题模式 / 色相 / 配色风格 / Color Spec / 列表布局 / 背景纹理 全部还原为站点默认（点击即生效，无确认弹窗） */
 function confirmReset() {
+	themeMode = DEFAULT_THEME;
 	hue = defaultHue;
 	style = defaultStyle;
 	spec = defaultSpec;
@@ -161,7 +190,8 @@ function confirmReset() {
 
 /** 是否有可重置的偏离（控制 Reset 按钮可见性） */
 const isDirty = $derived(
-	hue !== defaultHue ||
+	themeMode !== DEFAULT_THEME ||
+		hue !== defaultHue ||
 		style !== defaultStyle ||
 		spec !== defaultSpec ||
 		postListMode !== defaultLayoutMode ||
@@ -169,6 +199,15 @@ const isDirty = $derived(
 		texturePreset !== defaultTexturePreset ||
 		textureOpacity !== defaultTextureOpacity,
 );
+
+$effect(() => {
+	if (themeMode === lastAppliedThemeMode) return;
+	lastAppliedThemeMode = themeMode;
+	const origin =
+		lastThemeClickOrigin ?? resolveTransitionOrigin(null, themeControlEl);
+	lastThemeClickOrigin = undefined;
+	setThemeWithTransition(themeMode, origin);
+});
 
 $effect(() => {
 	if (hue || hue === 0) setHue(hue);
@@ -245,7 +284,7 @@ function styleColors(s: McStyle, h: number, d: boolean, sp: McSpec) {
 
 /** 当前主色（标题右侧预览圆点） */
 const currentColor = $derived(
-	panelOpened ? styleColors(style, hue, dark, spec).primary : "transparent",
+	panelOpen ? styleColors(style, hue, dark, spec).primary : "transparent",
 );
 
 /** 9 个风格的色卡预览（3×3 网格） */
@@ -253,7 +292,7 @@ const stylePreviews = $derived(
 	MC_STYLES.map((s) => ({
 		style: s,
 		label: i18n(styleKey(s)),
-		colors: panelOpened ? styleColors(s, hue, dark, spec) : null,
+		colors: panelOpen ? styleColors(s, hue, dark, spec) : null,
 	})),
 );
 </script>
@@ -284,6 +323,19 @@ const stylePreviews = $derived(
                 </div>
             </div>
             <Slider bind:value={hue} min={0} max={360} step={5} label={i18n(I18nKey.themeColor)} />
+
+            <div bind:this={themeControlEl} class="flex flex-col gap-1.5 pt-1">
+                <span class="display-settings__section-label">{i18n(I18nKey.lightDarkMode)}</span>
+                <SegmentedButton
+                    options={[
+                        { value: LIGHT_MODE, label: i18n(I18nKey.lightMode) },
+                        { value: DARK_MODE, label: i18n(I18nKey.darkMode) },
+                        { value: AUTO_MODE, label: i18n(I18nKey.systemMode) },
+                    ]}
+                    bind:value={themeMode}
+                    label={i18n(I18nKey.lightDarkMode)}
+                />
+            </div>
 
             {#if displayConfig.colorStyle}
                 <div class="flex flex-col gap-2 pt-1">

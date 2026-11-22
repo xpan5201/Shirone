@@ -17,7 +17,7 @@ const root = "/pagination-regression/";
 const pager = (page: Page) => page.locator("nav.m3-blog-pagination");
 const next = (page: Page) =>
 	pager(page)
-		.getByRole("button", { name: "Next page", exact: true })
+		.getByRole("button", { name: "下一页", exact: true })
 		.filter({ visible: true });
 
 async function ready(page: Page, domain: string, query = "") {
@@ -36,7 +36,7 @@ async function waitForList(page: Page, domain: string) {
 			.filter({ has: page.locator(".friend-section, .anime-section") }),
 	).toHaveCount(0);
 	await expect(
-		page.locator(`.${domain === "anime" ? "anime-card" : "friend-card"}`),
+		page.locator(`.${domain === "部番剧" ? "anime-card" : "friend-card"}`),
 	).toHaveCount(12);
 	await page.waitForFunction(() =>
 		getComputedStyle(document.documentElement)
@@ -91,9 +91,9 @@ test.beforeEach(async ({ page }) => {
 	);
 });
 
-for (const domain of ["friends", "anime"]) {
-	const prefix = domain === "friends" ? "friend" : "anime";
-	const title = domain === "friends" ? "Friend" : "Anime";
+for (const domain of ["个友链", "部番剧"]) {
+	const prefix = domain === "个友链" ? "个友链" : "部番剧";
+	const title = domain === "个友链" ? "Friend" : "番剧";
 	test(`${domain}: local history works when Swup starts before hydration`, async ({
 		page,
 	}) => {
@@ -188,7 +188,7 @@ for (const domain of ["friends", "anime"]) {
 		await expectToolsBelowNavbar(page, prefix);
 		await page
 			.getByRole("button", {
-				name: domain === "friends" ? "Alpha" : "Watching",
+				name: domain === "个友链" ? "Alpha" : "在看",
 				exact: true,
 			})
 			.click();
@@ -196,13 +196,13 @@ for (const domain of ["friends", "anime"]) {
 		await expect(page.locator(`.${prefix}-card`)).toHaveCount(12);
 		await next(page).click();
 		await expect(page).toHaveURL(
-			domain === "friends" ? /tag=Alpha.*page=2/ : /status=watching.*page=2/,
+			domain === "个友链" ? /tag=Alpha.*page=2/ : /status=watching.*page=2/,
 		);
 		await expect(page.locator(`.${prefix}-card__title`).first()).toHaveText(
 			`${title} 025`,
 		);
-		if (domain === "anime") {
-			await page.getByRole("button", { name: "List", exact: true }).click();
+		if (domain === "部番剧") {
+			await page.getByRole("button", { name: "列表", exact: true }).click();
 			await expect(page.locator(".anime-list")).toHaveClass(/anime-list--list/);
 			await expect(page).toHaveURL(/page=2/);
 		}
@@ -214,21 +214,21 @@ for (const domain of ["friends", "anime"]) {
 		await page.setViewportSize({ width: 390, height: 844 });
 		await ready(page, domain);
 		await expect(
-			pager(page).getByRole("button", { name: "Jump to page" }),
+			pager(page).getByRole("button", { name: "跳转到页面" }),
 		).toHaveAccessibleName("Jump to page 1 / 8");
-		await pager(page).getByRole("button", { name: "Jump to page" }).click();
-		const jump = pager(page).getByRole("textbox", { name: "Jump to page" });
+		await pager(page).getByRole("button", { name: "跳转到页面" }).click();
+		const jump = pager(page).getByRole("textbox", { name: "跳转到页面" });
 		await jump.fill("0");
 		await jump.press("Enter");
 		await expect(
-			pager(page).getByRole("button", { name: "Jump to page" }),
+			pager(page).getByRole("button", { name: "跳转到页面" }),
 		).toBeFocused();
-		await pager(page).getByRole("button", { name: "Jump to page" }).click();
+		await pager(page).getByRole("button", { name: "跳转到页面" }).click();
 		await jump.press("Escape");
 		await expect(
-			pager(page).getByRole("button", { name: "Jump to page" }),
+			pager(page).getByRole("button", { name: "跳转到页面" }),
 		).toBeFocused();
-		await pager(page).getByRole("button", { name: "Jump to page" }).click();
+		await pager(page).getByRole("button", { name: "跳转到页面" }).click();
 		await jump.fill("8");
 		await jump.press("Enter");
 		await expect(page.locator(`.${prefix}-card`)).toHaveCount(1);
@@ -239,7 +239,7 @@ for (const domain of ["friends", "anime"]) {
 		await expectToolsBelowNavbar(page, prefix);
 		await page.locator("[data-pagination-peer]").click();
 		await expect(page).toHaveURL(
-			new RegExp(`${root + (domain === "friends" ? "anime" : "friends")}/$`),
+			new RegExp(`${root + (domain === "个友链" ? "部番剧" : "个友链")}/$`),
 		);
 		await page.goBack();
 		await expect(page).toHaveURL(/page=8/);
@@ -282,7 +282,7 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 		await gate;
 		await route.fulfill({ contentType: "image/svg+xml", body: media });
 	});
-	await ready(page, "friends");
+	await ready(page, "个友链");
 	const avatar = page.locator(".friend-card .m3-avatar").first();
 	await expect(avatar.locator("img")).toHaveAttribute(
 		"data-image-state",
@@ -305,7 +305,7 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 		await coverGate;
 		await route.fulfill({ contentType: "image/svg+xml", body: media });
 	});
-	await ready(page, "anime");
+	await ready(page, "部番剧");
 	const cover = page.locator(".anime-card__cover").first();
 	await expect(cover.locator("img")).toHaveCSS("opacity", "0");
 	await expect(cover.locator(".m3-skeleton")).toBeVisible();
@@ -320,7 +320,7 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 	expect(await cover.boundingBox()).toEqual(coverBefore);
 	await page.unroute("**/pagination-media/anime-1.svg");
 	await page.route("**/pagination-media/*-1.svg", (route) => route.abort());
-	await ready(page, "anime");
+	await ready(page, "部番剧");
 	await expect(page.locator(".anime-card__placeholder").first()).toBeVisible();
 	await expect(page.locator(".anime-card__cover").first()).toHaveAccessibleName(
 		"Anime 001 8",
@@ -329,14 +329,14 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 		"data-image-state",
 		"loaded",
 	);
-	await ready(page, "friends");
+	await ready(page, "个友链");
 	await expect(avatar.locator(".m3-avatar__fallback")).toHaveText("F");
 });
 
 test("real Swup wait shows route progress and all failure exits clear it", async ({
 	page,
 }) => {
-	await ready(page, "friends");
+	await ready(page, "个友链");
 	await page.waitForFunction(() => Boolean(window.swup?.hooks));
 	let release!: () => void;
 	const gate = new Promise<void>((resolve) => {
@@ -377,7 +377,7 @@ test("real Swup wait shows route progress and all failure exits clear it", async
 test("repeated soft visits keep one owner for list history", async ({
 	page,
 }) => {
-	await ready(page, "friends");
+	await ready(page, "个友链");
 	await page.waitForFunction(() => Boolean(window.swup?.hooks));
 	for (let visit = 0; visit < 3; visit++) {
 		await next(page).click();
@@ -401,7 +401,7 @@ test("repeated soft visits keep one owner for list history", async ({
 test("pager fits wide and narrow columns without horizontal overflow", async ({
 	page,
 }, testInfo) => {
-	await ready(page, "friends");
+	await ready(page, "个友链");
 	await page.goto(`${root}window/?page=5`, { waitUntil: "domcontentloaded" });
 	await expect(page.locator(".friend-card__title").first()).toHaveText(
 		"Friend 041",
@@ -444,7 +444,7 @@ test("static blog pager keeps links and mobile jump working", async ({
 	const staticPager = page.locator(".m3-blog-pagination");
 	await expect(staticPager.locator('[aria-current="page"]')).toHaveText("1");
 	await staticPager
-		.getByRole("link", { name: "Next page", exact: true })
+		.getByRole("link", { name: "下一页", exact: true })
 		.click();
 	await expect(page).toHaveURL(/\/2\/$/);
 	await expect(staticPager.locator('[aria-current="page"]')).toHaveText("2");
@@ -453,13 +453,13 @@ test("static blog pager keeps links and mobile jump working", async ({
 	await page.waitForLoadState("load");
 	await expect(page.locator("html")).not.toHaveClass(/is-changing/);
 	await page.setViewportSize({ width: 390, height: 844 });
-	await staticPager.getByRole("button", { name: "Jump to page" }).click();
-	const input = staticPager.getByRole("textbox", { name: "Jump to page" });
+	await staticPager.getByRole("button", { name: "跳转到页面" }).click();
+	const input = staticPager.getByRole("textbox", { name: "跳转到页面" });
 	await input.fill("0");
 	await input.press("Enter");
 	await expect(input).toHaveCount(0);
 	await expect(page).toHaveURL(/\/2\/$/);
-	await staticPager.getByRole("button", { name: "Jump to page" }).click();
+	await staticPager.getByRole("button", { name: "跳转到页面" }).click();
 	await input.fill("1");
 	await input.press("Enter");
 	await expect(page).toHaveURL("/");
@@ -477,9 +477,9 @@ test("SSR keeps every entry accessible without JavaScript", async ({
 		await page.route("**/pagination-media/**", (route) =>
 			route.fulfill({ contentType: "image/svg+xml", body: media }),
 		);
-		for (const domain of ["friends", "anime"]) {
+		for (const domain of ["个友链", "部番剧"]) {
 			await page.goto(`${root + domain}/`, { waitUntil: "domcontentloaded" });
-			const prefix = domain === "friends" ? "friend" : "anime";
+			const prefix = domain === "个友链" ? "个友链" : "部番剧";
 			await expect(page.locator(`.${prefix}-card`)).toHaveCount(85);
 			await expect(page.locator(`.${prefix}-card__title`).last()).toBeVisible();
 			await expect(pager(page)).toHaveCount(0);
@@ -518,7 +518,7 @@ for (const preference of ["system", "site"]) {
 	}) => {
 		if (preference === "system")
 			await page.emulateMedia({ reducedMotion: "reduce" });
-		await ready(page, "anime");
+		await ready(page, "部番剧");
 		if (preference === "site")
 			await page.evaluate(() =>
 				document.documentElement.classList.add("motion-reduced"),
@@ -545,7 +545,7 @@ for (const theme of ["light", "dark"]) {
 			(value) => localStorage.setItem("theme", value),
 			theme,
 		);
-		await ready(page, "friends");
+		await ready(page, "个友链");
 		await expect
 			.poll(() =>
 				page.evaluate(() =>

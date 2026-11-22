@@ -1,4 +1,9 @@
-import type { SiteConfig } from "@/types/config";
+import type {
+	RegionSwitchConfig,
+	ResolvedRegionSwitchItem,
+	ResolvedRegionSwitchOptions,
+	SiteConfig,
+} from "@/types/config";
 import type {
 	ResolvedTextureOptions,
 	TextureConfig,
@@ -10,13 +15,33 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  * 类型见 src/types/config.ts。
  */
 export const siteConfig: SiteConfig = withUserConfig("site", {
-	site: "https://shirone.mysqil.com/",
+	site: "https://blog.yukinoo.com/",
 	base: "/",
-	title: "Shirone",
-	subtitle: "A Material 3 anime blog",
+	title: "优纪互联",
+	subtitle: "Material 3 二次元博客",
 	// 电脑端顶栏标题与导航内容区域："left" 左对齐，"center" 居中。
 	topAppBar: {
 		contentAlign: "center",
+	},
+	// 国内站 / 国际站线路切换（自动按上方 site 域名识别当前站；关闭时零 DOM、零开销）。
+	regionSwitch: {
+		enable: true,
+		items: [
+			{
+				key: "cn",
+				label: "$t:regionChina",
+				shortLabel: "CN",
+				url: "https://www.mintyuki.com/",
+				icon: "material-symbols:bolt-rounded",
+			},
+			{
+				key: "intl",
+				label: "$t:regionInternational",
+				shortLabel: "INTL",
+				url: "https://blog.yukinoo.com/",
+				icon: "material-symbols:public",
+			},
+		],
 	},
 	// 显示设置面板控制：配置各项前端切换项的可见性（默认全部开启）。
 	displaySettings: {
@@ -70,7 +95,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		homeText: {
 			// 仅在首页 Banner 中显示，标题与副标题会上下居中排列。
 			enable: true,
-			title: "Shirone",
+			title: "优纪互联",
 			subtitle: [
 				"特別なことはないけど、君がいると十分です",
 				"今でもあなたは私の光",
@@ -200,5 +225,90 @@ export function resolveDisplaySettings(): {
 		layoutMode: cfg?.layoutMode ?? true,
 		reduceMotion: cfg?.reduceMotion ?? true,
 		texture: textureOpts.enable && (cfg?.texture ?? true),
+	};
+}
+
+function normalizeOrigin(rawUrl: string): string {
+	try {
+		return new URL(rawUrl).origin.toLowerCase();
+	} catch {
+		return "";
+	}
+}
+
+function normalizeHomeHref(
+	rawUrl: string,
+): { href: string; host: string } | null {
+	try {
+		const parsed = new URL(rawUrl);
+		if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+			return null;
+		}
+		return {
+			href: `${parsed.origin}/`,
+			host: parsed.host,
+		};
+	} catch {
+		return null;
+	}
+}
+
+/**
+ * 解析国内/国际站点切换配置（含关闭短路、自动匹配当前站点与固定首页地址规范化）。
+ */
+export function resolveRegionSwitchOptions(
+	config: RegionSwitchConfig | null = siteConfig.regionSwitch ?? null,
+	currentSiteUrl: string = siteConfig.site,
+): ResolvedRegionSwitchOptions {
+	if (!config?.enable || !Array.isArray(config.items)) {
+		return { enable: false, items: [] };
+	}
+
+	const validItems: Array<
+		Omit<ResolvedRegionSwitchItem, "active"> & { origin: string }
+	> = [];
+	const seenKeys = new Set<string>();
+
+	for (const raw of config.items) {
+		const key = raw.key?.trim();
+		if (!key || seenKeys.has(key)) continue;
+		const normalized = normalizeHomeHref(raw.url);
+		if (!normalized) continue;
+		seenKeys.add(key);
+		validItems.push({
+			...raw,
+			key,
+			href: normalized.href,
+			host: normalized.host,
+			origin: normalizeOrigin(normalized.href),
+		});
+	}
+
+	if (validItems.length < 2) {
+		return { enable: false, items: [] };
+	}
+
+	const explicitKey = config.current?.trim();
+	const siteOrigin = normalizeOrigin(currentSiteUrl);
+	const matchedIndex = validItems.findIndex((item) =>
+		explicitKey ? item.key === explicitKey : item.origin === siteOrigin,
+	);
+	const activeIndex = matchedIndex >= 0 ? matchedIndex : 0;
+
+	const items: ResolvedRegionSwitchItem[] = validItems.map(
+		({ origin: _origin, ...item }, index) => ({
+			...item,
+			active: index === activeIndex,
+		}),
+	);
+
+	const currentItem = items[activeIndex];
+	const targetItem = items[(activeIndex + 1) % items.length];
+
+	return {
+		enable: true,
+		items,
+		currentItem,
+		targetItem,
 	};
 }

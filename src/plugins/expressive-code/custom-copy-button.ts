@@ -1,5 +1,7 @@
 import { definePlugin } from "@expressive-code/core";
 import type { Element } from "hast";
+import Key from "../../i18n/i18nKey-runtime.mjs";
+import { i18n } from "../../i18n/translation.ts";
 
 export function pluginCustomCopyButton(): ReturnType<typeof definePlugin> {
 	return definePlugin({
@@ -25,7 +27,7 @@ export function pluginCustomCopyButton(): ReturnType<typeof definePlugin> {
 						tagName: "button",
 						properties: {
 							className: ["copy-btn"],
-							"aria-label": "Copy code",
+							"aria-label": i18n(Key.codeCopy),
 						},
 						children: [
 							{

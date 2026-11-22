@@ -6,10 +6,12 @@
  * 链接由 Swup 自动接管，点击后收起抽屉；高亮与当前路由/分类筛选同步。
  */
 
+import RegionSwitch from "@components/molecules/RegionSwitch.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { resolveNavBarLinks, resolvePageKey } from "@utils/nav-utils";
+import { resolveRegionSwitchViewModel } from "@utils/region-switch";
 import { url } from "@utils/url-utils";
 import { onMount, tick } from "svelte";
 import { siteConfig } from "@/config";
@@ -20,6 +22,7 @@ let activePrimary = $state("");
 const openGroups = $state<Record<string, boolean>>({});
 
 const links = resolveNavBarLinks(navBarConfig.links);
+const regionSwitch = resolveRegionSwitchViewModel();
 
 const primaryItems = links.map((link) => {
 	const key = link.name.toLowerCase();
@@ -115,6 +118,18 @@ let drawerEl: HTMLElement | undefined = $state();
 			<div class="site-drawer__title">{siteConfig.title}</div>
 			<div class="site-drawer__subtitle">{siteConfig.subtitle}</div>
 		</div>
+
+		{#if regionSwitch.enable && regionSwitch.currentItem && regionSwitch.targetItem}
+			<RegionSwitch
+				variant="drawer"
+				items={regionSwitch.items}
+				currentItem={regionSwitch.currentItem}
+				targetItem={regionSwitch.targetItem}
+				groupLabel={regionSwitch.groupLabel}
+				switchTitle={regionSwitch.switchTitle}
+				hint={regionSwitch.hint}
+			/>
+		{/if}
 
 		<nav class="site-drawer__nav" aria-label={i18n(I18nKey.navigationDrawer)}>
 			{#each primaryItems as item (item.value)}

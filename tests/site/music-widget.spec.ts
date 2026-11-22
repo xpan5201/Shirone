@@ -155,15 +155,15 @@ test.describe("music sidebar client", () => {
 		page,
 	}) => {
 		await expect(
-			page.getByRole("button", { name: "Previous track" }),
+			page.getByRole("button", { name: "上一曲" }),
 		).toBeVisible();
 		await expect(
-			page.getByRole("button", { name: "Play", exact: true }),
+			page.getByRole("button", { name: "播放", exact: true }),
 		).toBeVisible();
 		await expect(
-			page.getByRole("button", { name: "Next track" }),
+			page.getByRole("button", { name: "下一曲" }),
 		).toBeVisible();
-		await expect(page.getByRole("button", { name: "Mute" })).toBeVisible();
+		await expect(page.getByRole("button", { name: "静音" })).toBeVisible();
 		await expect(
 			page.getByRole("button", { name: "Playback mode: Sequence" }),
 		).not.toHaveAttribute("aria-pressed");
@@ -188,12 +188,12 @@ test.describe("music sidebar client", () => {
 	test("plays, switches tracks, cycles modes, and announces only state changes", async ({
 		page,
 	}) => {
-		await page.getByRole("button", { name: "Play", exact: true }).click();
-		await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+		await page.getByRole("button", { name: "播放", exact: true }).click();
+		await expect(page.getByRole("button", { name: "暂停" })).toBeVisible();
 		await expect(
 			page.locator('[data-music-player] [aria-live="polite"]'),
 		).toHaveText("Now playing: First track");
-		await page.getByRole("button", { name: "Next track" }).click();
+		await page.getByRole("button", { name: "下一曲" }).click();
 		await expect(page.locator(".music-player__metadata strong")).toHaveText(
 			"Second track",
 		);
@@ -242,7 +242,7 @@ test.describe("music sidebar client", () => {
 
 	test("normal motion animates the playing cover", async ({ page }) => {
 		await page.emulateMedia({ reducedMotion: "no-preference" });
-		await page.getByRole("button", { name: "Play", exact: true }).click();
+		await page.getByRole("button", { name: "播放", exact: true }).click();
 		await expect(page.locator(".music-player__cover--playing")).toHaveCSS(
 			"animation-name",
 			"music-cover-playing",
@@ -255,11 +255,11 @@ test.describe("music sidebar client", () => {
 
 	test("manual transport advances in repeat-one mode", async ({ page }) => {
 		await page.getByRole("button", { name: "Playback mode: Sequence" }).click();
-		await page.getByRole("button", { name: "Next track" }).click();
+		await page.getByRole("button", { name: "下一曲" }).click();
 		await expect(page.locator(".music-player__metadata strong")).toHaveText(
 			"Second track",
 		);
-		await page.getByRole("button", { name: "Previous track" }).click();
+		await page.getByRole("button", { name: "上一曲" }).click();
 		await expect(page.locator(".music-player__metadata strong")).toHaveText(
 			"First track",
 		);
@@ -270,7 +270,7 @@ test.describe("music sidebar client", () => {
 
 	test("reduced motion removes cover animation", async ({ page }) => {
 		await page.emulateMedia({ reducedMotion: "reduce" });
-		await page.getByRole("button", { name: "Play", exact: true }).click();
+		await page.getByRole("button", { name: "播放", exact: true }).click();
 		await expect(page.locator(".music-player__cover--playing")).toHaveCSS(
 			"animation-name",
 			"none",
@@ -280,8 +280,8 @@ test.describe("music sidebar client", () => {
 	test("keeps one runtime audio object across Swup navigation", async ({
 		page,
 	}) => {
-		await page.getByRole("button", { name: "Play", exact: true }).click();
-		await page.getByRole("button", { name: "Next track" }).click();
+		await page.getByRole("button", { name: "播放", exact: true }).click();
+		await page.getByRole("button", { name: "下一曲" }).click();
 		await page.waitForFunction(() => Boolean(window.swup?.hooks));
 		await page.evaluate(() => {
 			(
@@ -349,7 +349,7 @@ test.describe("music sidebar client", () => {
 		// 未交互前：不谎报「正在加载」，显示「尚未请求」占位（issue #58）。
 		await expect(
 			page.locator("#music-client-test-host .music-player__metadata strong"),
-		).toHaveText("Not requested yet");
+		).toHaveText("音乐尚未请求");
 		const toggle = page.locator(".music-player__playlist-toggle");
 		await toggle.click();
 		await expect(

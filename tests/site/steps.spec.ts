@@ -21,7 +21,7 @@ test.describe("Markdown Steps component", () => {
 	}) => {
 		const steps = await openPost(page);
 		await expect(steps).toHaveCount(1);
-		await expect(steps).toHaveAttribute("aria-label", "Production deployment");
+		await expect(steps).toHaveAttribute("aria-label", "生产部署");
 		await expect(steps.locator(".m3-steps__item")).toHaveCount(4);
 		await expect(steps.locator(".m3-steps__index")).toHaveCount(4);
 		await expect(steps.locator(".m3-steps__header")).toHaveCount(0);

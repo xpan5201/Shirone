@@ -115,7 +115,7 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]">
+<html lang={siteLang} class="bg-[var(--page-bg)] text-[14px] md:text-[16px]">
 	<head>
 		<style is:inline>@layer properties, theme, base, components, utilities;</style>
 
@@ -224,7 +224,7 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 		<link rel="alternate" type="application/atom+xml" title={profileConfig.name} href={`${Astro.site}atom.xml`}/>
 	</head>
 	<body
-		class="min-h-screen transition"
+		class="min-h-screen"
 		data-current-page={initialPage}
 		data-banner-visible="false"
 		data-banner-layout="compact"

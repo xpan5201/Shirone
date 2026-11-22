@@ -60,7 +60,7 @@ test.describe("sidebar calendar widget", () => {
 	}
 
 	function prevBtn(page: import("@playwright/test").Page) {
-		return calendar(page).locator('[aria-label="Previous month"]');
+		return calendar(page).locator('[aria-label="上一月"]');
 	}
 
 	function title(page: import("@playwright/test").Page) {
@@ -125,7 +125,7 @@ test.describe("sidebar calendar widget", () => {
 		expect((await title(page).textContent())?.trim()).toBe("August 2026");
 		// 2026-08 之后无有文月：next 禁用
 		await expect(
-			calendar(page).locator('[aria-label="Next month"]'),
+			calendar(page).locator('[aria-label="下一月"]'),
 		).toBeDisabled();
 
 		// 继续 prev：2026-07 → 2024-05 → 2024-04 → 2023-10 → 2023-08 → 2022-07
@@ -143,7 +143,7 @@ test.describe("sidebar calendar widget", () => {
 		}
 		// 最早有文月：prev 禁用
 		await expect(
-			calendar(page).locator('[aria-label="Previous month"]'),
+			calendar(page).locator('[aria-label="上一月"]'),
 		).toBeDisabled();
 	});
 

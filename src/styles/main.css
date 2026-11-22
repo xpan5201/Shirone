@@ -57,9 +57,6 @@
 }
 
 @layer components {
-    h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
-        @apply transition;
-    }
     .link {
         @apply relative before:ease-out before:transition active:bg-none hover:before:bg-[var(--btn-plain-bg-hover)] active:before:bg-[var(--btn-plain-bg-active)] z-0
         before:absolute before:rounded-[inherit] before:inset-0 before:scale-[0.85] hover:before:scale-100 before:-z-10
@@ -166,6 +163,31 @@
 
 .collapsed {
     height: var(--collapsedHeight);
+}
+
+/* 主题切换瞬间归零动效时长令牌（不触碰 !important 红线）：
+   确保卡片、背景、水波纹与顶栏 100% 同帧落到目标态，供 View Transitions 捕获完整新快照，
+   降级路径下也表现为零撕裂同步瞬切。 */
+html.theme-switching {
+    --m3e-duration-short: 0s;
+    --m3e-duration-medium: 0s;
+    --m3e-duration-long: 0s;
+    --default-transition-duration: 0s;
+}
+
+/* 原生 View Transitions 圆形扩散层控制 */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 9999;
 }
 
 /* 减少动态效果：手动开关（html.motion-reduced）或系统偏好（prefers-reduced-motion）

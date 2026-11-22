@@ -94,7 +94,7 @@ test.describe("Mermaid diagrams", () => {
 		await expect(diagram).toHaveAttribute("data-mermaid-interaction", "ready");
 		const toolbarRow = diagram.locator("[data-mermaid-toolbar]");
 		const controlsButton = diagram.getByRole("button", {
-			name: "Diagram controls",
+			name: "图表控件",
 		});
 		const toolbarBounds = await toolbarRow.boundingBox();
 		const controlsBounds = await controlsButton.boundingBox();
@@ -104,7 +104,7 @@ test.describe("Mermaid diagrams", () => {
 		expect(toolbarBounds.height).toBeLessThanOrEqual(40);
 		expect(controlsBounds.width).toBeLessThanOrEqual(40);
 		expect(controlsBounds.height).toBeLessThanOrEqual(40);
-		await expect(diagram.getByRole("button", { name: "Zoom in" })).toBeHidden();
+		await expect(diagram.getByRole("button", { name: "放大" })).toBeHidden();
 		const bounds = await diagram.evaluate((element) => {
 			const rect = element.getBoundingClientRect();
 			const viewportElement = element.querySelector(
@@ -140,13 +140,13 @@ test.describe("Mermaid diagrams", () => {
 		const viewport = diagram.locator(".markdown-mermaid__viewport");
 		await expect(viewport).toHaveAttribute("data-mermaid-user-zoom", "1.0000");
 		const controlsButton = diagram.getByRole("button", {
-			name: "Diagram controls",
+			name: "图表控件",
 		});
 		await expect(controlsButton).toBeVisible();
-		await expect(diagram.getByRole("button", { name: "Zoom in" })).toBeHidden();
+		await expect(diagram.getByRole("button", { name: "放大" })).toBeHidden();
 		await controlsButton.click();
 
-		await diagram.getByRole("button", { name: "Zoom in" }).click();
+		await diagram.getByRole("button", { name: "放大" }).click();
 		await expect
 			.poll(() =>
 				viewport
@@ -223,7 +223,7 @@ test.describe("Mermaid diagrams", () => {
 			.poll(async () => (await svg.boundingBox())?.x ?? beforeTouchPan.x)
 			.toBeGreaterThan(beforeTouchPan.x + 30);
 
-		await diagram.getByRole("button", { name: "Reset view" }).click();
+		await diagram.getByRole("button", { name: "重置视图" }).click();
 		await expect(viewport).toHaveAttribute("data-mermaid-user-zoom", "1.0000");
 
 		await viewport.scrollIntoViewIfNeeded();
@@ -243,7 +243,7 @@ test.describe("Mermaid diagrams", () => {
 			.toBeGreaterThan(1);
 
 		await page.mouse.click(8, 8);
-		await expect(diagram.getByRole("button", { name: "Zoom in" })).toBeHidden();
+		await expect(diagram.getByRole("button", { name: "放大" })).toBeHidden();
 	});
 
 	test("keeps fullscreen modal state across theme renders and restores focus", async ({
@@ -252,8 +252,8 @@ test.describe("Mermaid diagrams", () => {
 		await page.setViewportSize({ width: 390, height: 640 });
 		await page.goto(POST_PATH, { waitUntil: "domcontentloaded" });
 		const diagram = await waitForViewer(page);
-		await diagram.getByRole("button", { name: "Diagram controls" }).click();
-		const openButton = diagram.getByRole("button", { name: "Open fullscreen" });
+		await diagram.getByRole("button", { name: "图表控件" }).click();
+		const openButton = diagram.getByRole("button", { name: "打开全屏" });
 		await openButton.click();
 
 		const dialog = page.getByRole("dialog", {
@@ -423,8 +423,8 @@ test.describe("Mermaid diagrams", () => {
 		await page.setViewportSize({ width: 360, height: 640 });
 		await page.goto(DEMO_PATH, { waitUntil: "domcontentloaded" });
 		const diagram = await waitForViewer(page);
-		await diagram.getByRole("button", { name: "Diagram controls" }).click();
-		await diagram.getByRole("button", { name: "Open fullscreen" }).click();
+		await diagram.getByRole("button", { name: "图表控件" }).click();
+		await diagram.getByRole("button", { name: "打开全屏" }).click();
 
 		const dialog = page.getByRole("dialog", {
 			name: /Fullscreen diagram:/,

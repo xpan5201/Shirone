@@ -101,7 +101,7 @@ test.describe("article last updated notice", () => {
 		);
 		expect(noticeHtml).toContain('<time datetime="2024-11-29T00:00:00.000Z"');
 		expect(html).toContain('class="last-updated-notice__warning"');
-		expect(html).toContain("Some content may be outdated");
+		expect(html).toContain("部分内容可能已过时");
 		expect(html).toContain('"dateModified":"2024-11-29"');
 		expect(noticeHtml).not.toContain("{date}");
 		expect(noticeHtml).not.toContain("{days}");
