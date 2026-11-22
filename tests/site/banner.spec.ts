@@ -154,14 +154,14 @@ test.describe("banner wallpaper", () => {
 			reducedMotion: false,
 		};
 		expect(resolveBannerState({ ...base, page: "home" }).copyMode).toBe("home");
-		expect(resolveBannerState({ ...base, page: "篇文章" }).copyMode).toBe(
+		expect(resolveBannerState({ ...base, page: "post" }).copyMode).toBe(
 			"context",
 		);
 		expect(resolveBannerState({ ...base, page: "notFound" }).copyMode).toBe(
 			"context",
 		);
 		expect(
-			resolveBannerState({ ...base, viewport: "mobile", page: "篇文章" })
+			resolveBannerState({ ...base, viewport: "mobile", page: "post" })
 				.copyMode,
 		).toBeNull();
 	});
@@ -284,9 +284,7 @@ test.describe("banner wallpaper", () => {
 		);
 		await expect(
 			context.locator("[data-banner-context-description]"),
-		).toHaveText(
-			"欢迎交换友链，申请方式见「关于」页。",
-		);
+		).toHaveText("欢迎交换友链，申请方式见「关于」页。");
 		await expect(context.locator("[data-banner-context-meta]")).toBeHidden();
 	});
 
@@ -683,7 +681,7 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"篇文章",
+				"post",
 		);
 		await expect(page.locator("[data-banner-context-title]")).toHaveText(
 			"Shirone 写作与使用指南",
@@ -704,7 +702,7 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"个友链",
+				"friends",
 		);
 		await expect(page.locator("[data-banner-context-title]")).toHaveText(
 			"友链",
@@ -748,7 +746,7 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"个友链",
+				"friends",
 		);
 		await page.waitForFunction(() => {
 			const states =
@@ -793,7 +791,7 @@ test.describe("banner wallpaper", () => {
 			await page.waitForFunction(
 				() =>
 					document.getElementById("swup-container")?.dataset.currentPage ===
-					"个友链",
+					"friends",
 			);
 			await expect(page.locator("#banner-wrapper")).toHaveAttribute(
 				"data-context-motion",
@@ -820,7 +818,7 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"篇文章",
+				"post",
 		);
 		await waitForBannerState(page, false);
 		await expect(page.locator(".banner-waves")).toHaveCount(1);

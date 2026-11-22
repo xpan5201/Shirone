@@ -15,15 +15,15 @@ import { timelineConfig } from "../../src/config/timelineConfig";
  * 关闭的功能页面会重定向 `/404/`，导航入口必须一并消失，因此这里按开关断言。
  */
 const featureRoutes: Array<[string, boolean, string]> = [
-	["个友链", friendsConfig.enable, "/friends/"],
-	["条动态", momentsConfig.enable, "/moments/"],
-	["部番剧", animeConfig.enable, "/anime/"],
+	["friends", friendsConfig.enable, "/friends/"],
+	["moments", momentsConfig.enable, "/moments/"],
+	["anime", animeConfig.enable, "/anime/"],
 	["compass", compassConfig.enable, "/compass/"],
-	["个相册", albumsConfig.enable, "/albums/"],
+	["albums", albumsConfig.enable, "/albums/"],
 	["timeline", timelineConfig.enable, "/timeline/"],
-	["个项目", projectsConfig.enable, "/projects/"],
-	["款设备", devicesConfig.enable, "/devices/"],
-	["项技能", skillsConfig.enable, "/skills/"],
+	["projects", projectsConfig.enable, "/projects/"],
+	["devices", devicesConfig.enable, "/devices/"],
+	["skills", skillsConfig.enable, "/skills/"],
 	["about", aboutConfig.enable, "/about/"],
 ];
 

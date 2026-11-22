@@ -128,7 +128,7 @@ test.describe("M3E Ambient Texture & Pattern System", () => {
 
 		// 找到 topography 纹理预设按钮并点击
 		const topographyBtn = page.locator(
-			'#display-setting button[role="radio"][aria-label*="流光等高线"], #display-setting button[role="radio"][aria-label*="流光等高线"], #display-setting button[role="radio"][aria-label*="等高線"]',
+			'#display-setting button[role="radio"][aria-label*="Topography"], #display-setting button[role="radio"][aria-label*="流光等高线"], #display-setting button[role="radio"][aria-label*="等高線"]',
 		);
 		await expect(topographyBtn).toBeVisible();
 		await topographyBtn.click();

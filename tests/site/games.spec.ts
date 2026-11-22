@@ -12,7 +12,7 @@ test.describe("游戏展示页", () => {
 	test("渲染页面标题、游戏卡片与评分/时长/状态信息", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"款游戏",
+			"games",
 		);
 		await expect(page.locator(".page-header__title")).toHaveText("游戏");
 		await expect(page.locator(".games-section__count")).toHaveText("2 games");
@@ -125,7 +125,7 @@ test.describe("游戏展示页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "款游戏",
+		key: "games",
 		fromPath: "/skills/",
 		toPath: /\/games\/$/,
 		cardSelector: "game-card",

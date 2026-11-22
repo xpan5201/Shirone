@@ -82,7 +82,7 @@ test.describe("Feed and Subscription System", () => {
 		);
 		await expect(
 			page
-				.locator('a:has-text("查看原始 XML"), a:has-text("查看原始 XML")')
+				.locator('a:has-text("View Raw XML"), a:has-text("查看原始 XML")')
 				.first(),
 		).toBeVisible();
 

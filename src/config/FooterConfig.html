@@ -15,28 +15,30 @@
     line-height: 1.4;
     font-variant-numeric: tabular-nums;
   }
-  .shirone-beian-item {
+  .m3-blog-footer__custom .shirone-beian a.shirone-beian-item {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
     padding: 0.3125rem 0.75rem;
     border-radius: 9999px;
-    color: inherit;
+    color: var(--on-surface-variant);
+    font-weight: 500;
     text-decoration: none;
-    opacity: 0.84;
-    background: color-mix(in srgb, currentColor 5%, transparent);
-    border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+    opacity: 1;
+    background: var(--surface-container-low);
+    border: 1px solid var(--outline-variant);
     transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
                 background-color 0.2s ease,
                 border-color 0.2s ease,
-                opacity 0.2s ease,
+                color 0.2s ease,
                 box-shadow 0.2s ease;
   }
-  .shirone-beian-item:hover {
+  .m3-blog-footer__custom .shirone-beian a.shirone-beian-item:hover {
     opacity: 1;
+    color: var(--on-surface);
     transform: translateY(-1px);
-    background: color-mix(in srgb, currentColor 9%, transparent);
-    border-color: color-mix(in srgb, currentColor 22%, transparent);
+    background: var(--surface-container);
+    border-color: var(--outline);
     box-shadow: 0 4px 12px -4px color-mix(in srgb, currentColor 18%, transparent);
   }
   .shirone-beian-icon {

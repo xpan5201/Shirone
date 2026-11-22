@@ -288,7 +288,7 @@ test.describe("article share page integration", () => {
 		await expect(dialog).toBeVisible();
 
 		const copyBtn = dialog.locator(
-			".m3-button:has-text('复制链接'), .m3-button:has-text('复制链接')",
+			".m3-button:has-text('Copy link'), .m3-button:has-text('复制链接')",
 		);
 		await expect(copyBtn).toBeVisible();
 		await copyBtn.click();

@@ -192,7 +192,7 @@ test.describe("FAB Navigation System", () => {
 		await page.waitForURL("**/posts/expressive-code/");
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"篇文章",
+			"post",
 		);
 		await expect(page.locator("#floating-toc-tree a").first()).toHaveAttribute(
 			"href",
