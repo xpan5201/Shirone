@@ -11,15 +11,11 @@ test.describe("文章加密安全与防泄密", () => {
 		const html = await page.content();
 
 		// 绝不包含正文独有的机密明文字符
-		expect(html).not.toContain(
-			"恭喜！你已成功解锁",
-		);
+		expect(html).not.toContain("恭喜！你已成功解锁");
 		expect(html).not.toContain("Web Crypto API（AES-256-GCM + PBKDF2）");
 		expect(html).not.toContain("欧拉恒等式");
 		expect(html).not.toContain("架构说明");
-		expect(html).not.toContain(
-			"演示 Shirone 中客户端认证解密",
-		);
+		expect(html).not.toContain("演示 Shirone 中客户端认证解密");
 
 		// 包含门控组件与密文容器
 		expect(html).toContain("password-gate");
@@ -31,12 +27,8 @@ test.describe("文章加密安全与防泄密", () => {
 		if (response.ok()) {
 			const xml = await response.text();
 			if (xml.includes("<item>")) {
-				expect(xml).toContain(
-					"🔒 密码保护与文章加密演示",
-				);
-				expect(xml).not.toContain(
-					"恭喜！你已成功解锁",
-				);
+				expect(xml).toContain("🔒 密码保护与文章加密演示");
+				expect(xml).not.toContain("恭喜！你已成功解锁");
 				expect(xml).toMatch(
 					/This post is encrypted|本文已加密保护|password-protected/,
 				);
@@ -45,9 +37,7 @@ test.describe("文章加密安全与防泄密", () => {
 		if (fs.existsSync("dist/rss.xml")) {
 			const xml = fs.readFileSync("dist/rss.xml", "utf8");
 			expect(xml).toContain("🔒 密码保护与文章加密演示");
-			expect(xml).not.toContain(
-				"恭喜！你已成功解锁",
-			);
+			expect(xml).not.toContain("恭喜！你已成功解锁");
 			expect(xml).toMatch(
 				/This post is encrypted|本文已加密保护|password-protected/,
 			);
@@ -75,10 +65,10 @@ test.describe("文章加密交互与解密流", () => {
 
 		// 密码显隐切换
 		const showBtn = page.locator(
-			'.password-gate button[aria-label="显示密码"], .password-gate button[aria-label="显示密码"]',
+			'.password-gate button[aria-label="显示密码"], .password-gate button[aria-label="Show password"]',
 		);
 		const hideBtn = page.locator(
-			'.password-gate button[aria-label="隐藏密码"], .password-gate button[aria-label="隐藏密码"]',
+			'.password-gate button[aria-label="隐藏密码"], .password-gate button[aria-label="Hide password"]',
 		);
 		if ((await showBtn.count()) > 0 && (await showBtn.isVisible())) {
 			await showBtn.click();
@@ -107,9 +97,7 @@ test.describe("文章加密交互与解密流", () => {
 		// 验证解密成功，正文呈现
 		const content = page.locator(".markdown-content");
 		await expect(content).toBeVisible({ timeout: 10000 });
-		await expect(content).toContainText(
-			"恭喜！你已成功解锁",
-		);
+		await expect(content).toContainText("恭喜！你已成功解锁");
 		await expect(gate).toBeHidden();
 
 		const headingSpacing = await content.evaluate((root) => {
@@ -117,10 +105,7 @@ test.describe("文章加密交互与解密流", () => {
 			return {
 				sectionSpace: rootStyles.getPropertyValue("--m3e-space-4").trim(),
 				compactSpace: rootStyles.getPropertyValue("--m3e-space-2").trim(),
-				headings: [
-					"密码保护的文章",
-					"1-安全架构与核心特性",
-				].map((id) => {
+				headings: ["密码保护的文章", "1-安全架构与核心特性"].map((id) => {
 					const heading = root.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
 					if (!heading) throw new Error(`Missing decrypted heading #${id}`);
 					const computed = getComputedStyle(heading);
@@ -153,9 +138,7 @@ test.describe("文章加密交互与解密流", () => {
 			.locator("#toc a.m3-blog-toc__item")
 			.filter({ hasText: "安全架构与核心特性" });
 		await expect(tocHeading).toHaveCount(1);
-		await expect(tocHeading).toHaveText(
-			"1. 安全架构与核心特性",
-		);
+		await expect(tocHeading).toHaveText("1. 安全架构与核心特性");
 		await expect(tocHeading).toHaveCSS("display", "flex");
 		await expect(tocHeading.locator(".m3-blog-toc__mark")).toBeVisible();
 
@@ -181,9 +164,7 @@ test.describe("文章加密交互与解密流", () => {
 		);
 		expect(sessionRaw).not.toBeNull();
 		const parsedSession = JSON.parse(sessionRaw || "{}");
-		expect(parsedSession.content).toContain(
-			"恭喜！你已成功解锁",
-		);
+		expect(parsedSession.content).toContain("恭喜！你已成功解锁");
 		expect(parsedSession.password).toBeUndefined();
 
 		// Swup 站内跳转后返回保持已解锁状态
@@ -247,10 +228,7 @@ test.describe("文章加密交互与解密流", () => {
 		await expect(floatingItem).toHaveCount(1);
 
 		// 点击条目锚点跳转并自动收起
-		await expect(floatingItem).toHaveAttribute(
-			"href",
-			/1-%E5%AE%89%E5%85%A8/i,
-		);
+		await expect(floatingItem).toHaveAttribute("href", /1-%E5%AE%89%E5%85%A8/i);
 		await floatingItem.click();
 		await expect(panel).not.toHaveClass(/is-open/);
 		await expect(page).toHaveURL(/1-%E5%AE%89%E5%85%A8/i);

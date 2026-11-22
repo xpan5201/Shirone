@@ -12,7 +12,7 @@ import { expect, test } from "@playwright/test";
  * 演示数据为纯英文（站点默认语言 en）；站点文案断言用英文，分组名来自数据。
  */
 
-const SHELF_KEYS = ["开发", "design", "tools", "reads"];
+const SHELF_KEYS = ["dev", "design", "tools", "reads"];
 const SHELF_NAMES: Record<string, string> = {
 	dev: "Development",
 	design: "Design",
@@ -105,7 +105,7 @@ test.describe("站点罗盘页", () => {
 		await expect(page.locator(".compass-tile")).toHaveCount(3);
 		await expect(page.locator(".compass-section__loading")).toHaveCount(0);
 		await expect(page.locator('section[data-shelf="design"]')).toBeVisible();
-		for (const key of ["开发", "tools", "reads"]) {
+		for (const key of ["dev", "tools", "reads"]) {
 			await expect(page.locator(`section[data-shelf="${key}"]`)).toHaveCount(0);
 		}
 		// 再点取消 → 恢复全部 + URL 参数移除
@@ -157,7 +157,7 @@ test.describe("站点罗盘页", () => {
 			.locator('.compass-section__search input[type="search"]')
 			.fill("regex");
 		await expect(page.locator('section[data-shelf="tools"]')).toBeVisible();
-		for (const key of ["开发", "design", "reads"]) {
+		for (const key of ["dev", "design", "reads"]) {
 			await expect(page.locator(`section[data-shelf="${key}"]`)).toHaveCount(0);
 		}
 	});

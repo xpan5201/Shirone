@@ -28,29 +28,31 @@ test("style runner includes every applicable site spec and excludes local-only s
 	assert.ok(!expected.includes("waline.spec.ts"));
 });
 
-test("workflow runs four style shards and retains a stable aggregate check", () => {
+test("workflow runs the focused personal-site smoke and WCAG a11y suite", () => {
 	const workflow = parse(readFileSync(WORKFLOW_PATH, "utf8"));
-	const matrix = workflow.jobs["style-tests"]?.strategy?.matrix?.shard;
-	assert.deepEqual(matrix, ["1/4", "2/4", "3/4", "4/4"]);
-	assert.equal(workflow.jobs.styles.name, "Style regressions");
-	assert.ok(workflow.jobs.styles.needs.includes("style-tests"));
-	assert.match(
-		workflow.jobs["style-tests"].steps.at(-1).run,
-		/scripts\/ci\/run-style-regressions\.sh/,
-	);
-	// Preserve the core fixtures while allowing focused modes (for example,
-	// `no-toc`) to be added without making this test brittle.
-	const commentModes = workflow.jobs["comment-tests"].strategy.matrix.mode;
-	assert.ok(Array.isArray(commentModes));
-	for (const requiredMode of ["disabled", "waline", "twikoo"]) {
+	const smokeJob = workflow.jobs["site-smoke"];
+	assert.equal(smokeJob?.name, "Site smoke and a11y");
+	const runCmd = smokeJob.steps.at(-1)?.run ?? "";
+	const specs = runCmd.match(/tests\/site\/[a-z0-9-]+\.spec\.ts/g) ?? [];
+	for (const requiredSpec of [
+		"tests/site/a11y.spec.ts",
+		"tests/site/site-controls.spec.ts",
+		"tests/site/top-app-bar.spec.ts",
+		"tests/site/theme-scheme.spec.ts",
+		"tests/site/post-list.spec.ts",
+		"tests/site/footer.spec.ts",
+		"tests/site/layout-stability.spec.ts",
+		"tests/site/swup-navigation.spec.ts",
+		"tests/site/not-found.spec.ts",
+	]) {
 		assert.ok(
-			commentModes.includes(requiredMode),
-			`comment regression matrix must retain the ${requiredMode} fixture`,
+			specs.includes(requiredSpec),
+			`site-smoke job must include ${requiredSpec}`,
 		);
 	}
 	assert.equal(
-		new Set(commentModes).size,
-		commentModes.length,
-		"comment regression matrix must not repeat a fixture",
+		new Set(specs).size,
+		specs.length,
+		"site-smoke job must not list duplicate spec files",
 	);
 });

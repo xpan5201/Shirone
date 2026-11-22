@@ -30,7 +30,7 @@ export interface PersistentShellSyncCase {
 }
 
 /** Sidebar widgets every feature page is expected to show. */
-const EXPECTED_WIDGETS = ["个分类", "个标签"];
+const EXPECTED_WIDGETS = ["categories", "tags"];
 
 export function registerPersistentShellSync(
 	title: string,

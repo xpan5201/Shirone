@@ -342,7 +342,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 		}
 		// swup 点击文章卡链接 → 文章页：退场淡出（150ms）后 hidden
 		await clickLink(page, '#swup-container a[href^="/posts/"]');
-		await waitCurrentPage(page, "篇文章");
+		await waitCurrentPage(page, "post");
 		await waitStatsHidden(page, true);
 		await expect(page.locator("#toc")).toHaveCSS("overflow-y", "auto");
 
@@ -381,7 +381,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 		expect(await statsWrapperHidden(page)).toBe(false);
 
 		await clickLink(page, '#swup-container a[href^="/posts/"]');
-		await waitCurrentPage(page, "篇文章");
+		await waitCurrentPage(page, "post");
 		await page.waitForFunction(() => {
 			const wrapper = document
 				.querySelector('widget-layout[data-id="site-stats"]')
@@ -412,7 +412,7 @@ test.describe("sidebar pages filter (swup sync)", () => {
 		await page.goto("/", { waitUntil: "networkidle" });
 
 		await clickLink(page, '#swup-container a[href^="/posts/"]');
-		await waitCurrentPage(page, "篇文章");
+		await waitCurrentPage(page, "post");
 		// 瞬切路径：无 150ms 淡出等待，hidden 立即出现
 		await waitStatsHidden(page, true);
 	});

@@ -13,7 +13,7 @@ test.describe("技能页", () => {
 	test("渲染配置技能与离散熟练度", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"项技能",
+			"skills",
 		);
 		await expect(page.locator(".page-header__title")).toHaveText("技能");
 		await expect(page.locator(".skills-section__count")).toHaveText(
@@ -60,7 +60,7 @@ test.describe("技能页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "项技能",
+		key: "skills",
 		fromPath: "/games/",
 		toPath: /\/skills\/$/,
 		cardSelector: "skill-card",

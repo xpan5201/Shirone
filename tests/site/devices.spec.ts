@@ -12,7 +12,7 @@ test.describe("设备展示页", () => {
 	test("渲染页面标题、设备卡片与状态/规格信息", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"款设备",
+			"devices",
 		);
 		await expect(page.locator(".page-header__title")).toHaveText("我的设备");
 		await expect(page.locator(".devices-section__count")).toHaveText(
@@ -177,7 +177,7 @@ test.describe("设备展示页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "款设备",
+		key: "devices",
 		fromPath: "/skills/",
 		toPath: /\/devices\/$/,
 		cardSelector: "device-card",

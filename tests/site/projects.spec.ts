@@ -12,7 +12,7 @@ test.describe("项目页", () => {
 	test("渲染代表项目、阶段、技术栈与源码链接", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"个项目",
+			"projects",
 		);
 		await expect(page.locator(".page-header__title")).toHaveText("项目");
 		await expect(page.locator(".projects-section__count")).toHaveText(
@@ -270,7 +270,7 @@ test.describe("项目页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "个项目",
+		key: "projects",
 		fromPath: "/skills/",
 		toPath: /\/projects\/$/,
 		cardSelector: "project-card",

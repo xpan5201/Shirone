@@ -36,7 +36,7 @@ async function waitForList(page: Page, domain: string) {
 			.filter({ has: page.locator(".friend-section, .anime-section") }),
 	).toHaveCount(0);
 	await expect(
-		page.locator(`.${domain === "部番剧" ? "anime-card" : "friend-card"}`),
+		page.locator(`.${domain === "anime" ? "anime-card" : "friend-card"}`),
 	).toHaveCount(12);
 	await page.waitForFunction(() =>
 		getComputedStyle(document.documentElement)
@@ -91,9 +91,9 @@ test.beforeEach(async ({ page }) => {
 	);
 });
 
-for (const domain of ["个友链", "部番剧"]) {
-	const prefix = domain === "个友链" ? "个友链" : "部番剧";
-	const title = domain === "个友链" ? "Friend" : "番剧";
+for (const domain of ["friends", "anime"]) {
+	const prefix = domain === "friends" ? "friend" : "anime";
+	const title = domain === "friends" ? "Friend" : "Anime";
 	test(`${domain}: local history works when Swup starts before hydration`, async ({
 		page,
 	}) => {
@@ -188,7 +188,7 @@ for (const domain of ["个友链", "部番剧"]) {
 		await expectToolsBelowNavbar(page, prefix);
 		await page
 			.getByRole("button", {
-				name: domain === "个友链" ? "Alpha" : "在看",
+				name: domain === "friends" ? "Alpha" : "在看",
 				exact: true,
 			})
 			.click();
@@ -196,12 +196,12 @@ for (const domain of ["个友链", "部番剧"]) {
 		await expect(page.locator(`.${prefix}-card`)).toHaveCount(12);
 		await next(page).click();
 		await expect(page).toHaveURL(
-			domain === "个友链" ? /tag=Alpha.*page=2/ : /status=watching.*page=2/,
+			domain === "friends" ? /tag=Alpha.*page=2/ : /status=watching.*page=2/,
 		);
 		await expect(page.locator(`.${prefix}-card__title`).first()).toHaveText(
 			`${title} 025`,
 		);
-		if (domain === "部番剧") {
+		if (domain === "anime") {
 			await page.getByRole("button", { name: "列表", exact: true }).click();
 			await expect(page.locator(".anime-list")).toHaveClass(/anime-list--list/);
 			await expect(page).toHaveURL(/page=2/);
@@ -239,7 +239,7 @@ for (const domain of ["个友链", "部番剧"]) {
 		await expectToolsBelowNavbar(page, prefix);
 		await page.locator("[data-pagination-peer]").click();
 		await expect(page).toHaveURL(
-			new RegExp(`${root + (domain === "个友链" ? "部番剧" : "个友链")}/$`),
+			new RegExp(`${root + (domain === "friends" ? "anime" : "friends")}/$`),
 		);
 		await page.goBack();
 		await expect(page).toHaveURL(/page=8/);
@@ -282,7 +282,7 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 		await gate;
 		await route.fulfill({ contentType: "image/svg+xml", body: media });
 	});
-	await ready(page, "个友链");
+	await ready(page, "friends");
 	const avatar = page.locator(".friend-card .m3-avatar").first();
 	await expect(avatar.locator("img")).toHaveAttribute(
 		"data-image-state",
@@ -305,7 +305,7 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 		await coverGate;
 		await route.fulfill({ contentType: "image/svg+xml", body: media });
 	});
-	await ready(page, "部番剧");
+	await ready(page, "anime");
 	const cover = page.locator(".anime-card__cover").first();
 	await expect(cover.locator("img")).toHaveCSS("opacity", "0");
 	await expect(cover.locator(".m3-skeleton")).toBeVisible();
@@ -320,7 +320,7 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 	expect(await cover.boundingBox()).toEqual(coverBefore);
 	await page.unroute("**/pagination-media/anime-1.svg");
 	await page.route("**/pagination-media/*-1.svg", (route) => route.abort());
-	await ready(page, "部番剧");
+	await ready(page, "anime");
 	await expect(page.locator(".anime-card__placeholder").first()).toBeVisible();
 	await expect(page.locator(".anime-card__cover").first()).toHaveAccessibleName(
 		"Anime 001 8",
@@ -329,14 +329,14 @@ test("slow covers and avatars stay local, failed and cached images settle", asyn
 		"data-image-state",
 		"loaded",
 	);
-	await ready(page, "个友链");
+	await ready(page, "friends");
 	await expect(avatar.locator(".m3-avatar__fallback")).toHaveText("F");
 });
 
 test("real Swup wait shows route progress and all failure exits clear it", async ({
 	page,
 }) => {
-	await ready(page, "个友链");
+	await ready(page, "friends");
 	await page.waitForFunction(() => Boolean(window.swup?.hooks));
 	let release!: () => void;
 	const gate = new Promise<void>((resolve) => {
@@ -377,7 +377,7 @@ test("real Swup wait shows route progress and all failure exits clear it", async
 test("repeated soft visits keep one owner for list history", async ({
 	page,
 }) => {
-	await ready(page, "个友链");
+	await ready(page, "friends");
 	await page.waitForFunction(() => Boolean(window.swup?.hooks));
 	for (let visit = 0; visit < 3; visit++) {
 		await next(page).click();
@@ -401,7 +401,7 @@ test("repeated soft visits keep one owner for list history", async ({
 test("pager fits wide and narrow columns without horizontal overflow", async ({
 	page,
 }, testInfo) => {
-	await ready(page, "个友链");
+	await ready(page, "friends");
 	await page.goto(`${root}window/?page=5`, { waitUntil: "domcontentloaded" });
 	await expect(page.locator(".friend-card__title").first()).toHaveText(
 		"Friend 041",
@@ -443,9 +443,7 @@ test("static blog pager keeps links and mobile jump working", async ({
 	await page.goto("/", { waitUntil: "load" });
 	const staticPager = page.locator(".m3-blog-pagination");
 	await expect(staticPager.locator('[aria-current="page"]')).toHaveText("1");
-	await staticPager
-		.getByRole("link", { name: "下一页", exact: true })
-		.click();
+	await staticPager.getByRole("link", { name: "下一页", exact: true }).click();
 	await expect(page).toHaveURL(/\/2\/$/);
 	await expect(staticPager.locator('[aria-current="page"]')).toHaveText("2");
 	// Swup is idle-loaded; this link can still perform a full navigation.
@@ -477,9 +475,9 @@ test("SSR keeps every entry accessible without JavaScript", async ({
 		await page.route("**/pagination-media/**", (route) =>
 			route.fulfill({ contentType: "image/svg+xml", body: media }),
 		);
-		for (const domain of ["个友链", "部番剧"]) {
+		for (const domain of ["friends", "anime"]) {
 			await page.goto(`${root + domain}/`, { waitUntil: "domcontentloaded" });
-			const prefix = domain === "个友链" ? "个友链" : "部番剧";
+			const prefix = domain === "friends" ? "friend" : "anime";
 			await expect(page.locator(`.${prefix}-card`)).toHaveCount(85);
 			await expect(page.locator(`.${prefix}-card__title`).last()).toBeVisible();
 			await expect(pager(page)).toHaveCount(0);
@@ -518,7 +516,7 @@ for (const preference of ["system", "site"]) {
 	}) => {
 		if (preference === "system")
 			await page.emulateMedia({ reducedMotion: "reduce" });
-		await ready(page, "部番剧");
+		await ready(page, "anime");
 		if (preference === "site")
 			await page.evaluate(() =>
 				document.documentElement.classList.add("motion-reduced"),
@@ -545,7 +543,7 @@ for (const theme of ["light", "dark"]) {
 			(value) => localStorage.setItem("theme", value),
 			theme,
 		);
-		await ready(page, "个友链");
+		await ready(page, "friends");
 		await expect
 			.poll(() =>
 				page.evaluate(() =>

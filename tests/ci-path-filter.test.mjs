@@ -96,36 +96,35 @@ function assertClassification(options, expected) {
 	);
 }
 
-test("workflow delegates changed-path outputs to the tested detector", () => {
+test("workflow keeps core quality, checks, build, and site smoke jobs", () => {
 	const workflow = parseYaml(readFileSync(WORKFLOW, "utf8"));
-	const classifyStep = workflow.jobs.changes.steps.find(
-		(step) => step.id === "filter",
+	assert.deepEqual(workflow.on.push.branches, ["main", "main-INTL"]);
+	assert.deepEqual(workflow.on.pull_request.branches, ["main", "main-INTL"]);
+	for (const jobId of [
+		"quality",
+		"checks",
+		"windows-paths",
+		"build",
+		"site-smoke",
+	]) {
+		assert.ok(workflow.jobs[jobId], `workflow must define the ${jobId} job`);
+	}
+	const biomeStep = workflow.jobs.quality.steps.find(
+		(step) => step.name === "Run Biome",
 	);
-	assert.ok(classifyStep, "changed-path classifier step must exist");
-	assert.ok(
-		classifyStep.run.includes(
-			'scripts/ci/detect-browser-suites.sh "$base" "$head" "$GITHUB_OUTPUT"',
-		),
-		"workflow must invoke the detector that combines the guard and classifier",
+	assert.equal(biomeStep?.["continue-on-error"], undefined);
+	const typeCheckStep = workflow.jobs.checks.steps.find(
+		(step) => step.run === "pnpm type-check",
 	);
-	assert.doesNotMatch(
-		classifyStep.run,
-		/scripts\/ci\/(?:classifier-change-guard|classify-browser-suites)\.sh/,
-		"workflow must not append either intermediate result directly to GITHUB_OUTPUT",
-	);
-	const packageJob = workflow.jobs["shirones-pipeline-tests"];
-	assert.equal(packageJob.needs, undefined);
-	assert.equal(packageJob.if, undefined);
-	assert.ok(
-		packageJob.steps.some(
-			(step) => step.run === "node scripts/ci/test-shirones-pipeline.mjs",
-		),
-		"full package validation must run unconditionally through the Node runner",
-	);
+	assert.ok(typeCheckStep, "checks job must run pnpm type-check");
 	const manifestCheck = workflow.jobs.checks.steps.find(
 		(step) => step.name === "Validate package runtime manifest",
 	);
 	assert.equal(manifestCheck?.run, "pnpm check:package-manifest");
+	const unitTestStep = workflow.jobs.checks.steps.find(
+		(step) => step.name === "Run unit tests",
+	);
+	assert.equal(unitTestStep?.run, 'node --test "tests/**/*.test.mjs"');
 });
 
 function runWorkflowDetector(cwd, detector, base, head, outputFile) {
