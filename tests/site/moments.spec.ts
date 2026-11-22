@@ -22,7 +22,7 @@ test.describe("动态页", () => {
 		const first = page.locator(".moment-card").first();
 		// 置顶条目排最前，带置顶徽标与心情图标
 		await expect(first.locator(".moment-card__badge--pinned")).toHaveText(
-			"Pinned",
+			"置顶",
 		);
 		await expect(
 			first.locator(".moment-card__badge:not(.moment-card__badge--pinned) svg"),
@@ -32,7 +32,7 @@ test.describe("动态页", () => {
 			"href",
 			"/about/",
 		);
-		await expect(first.locator(".moment-card__name")).toHaveText("Shirone");
+		await expect(first.locator(".moment-card__name")).toHaveText("Yuki");
 		await expect(first.locator(".moment-card__author img")).toHaveAttribute(
 			"srcset",
 			/ 64w, .* 96w/,
@@ -46,7 +46,7 @@ test.describe("动态页", () => {
 		expect(times.length).toBe(MOMENT_COUNT);
 		// 正文为构建期渲染的 markdown
 		await expect(first.locator(".moment-card__content")).toContainText(
-			"Welcome to Moments",
+			"欢迎来到动态",
 		);
 	});
 
@@ -99,7 +99,7 @@ test.describe("动态页", () => {
 		);
 		// 键盘 →/← 切换，计数同步；首图 prev 禁用
 		await expect(
-			viewer.getByRole("button", { name: "Previous image" }),
+			viewer.getByRole("button", { name: "上一张" }),
 		).toBeDisabled();
 		await page.keyboard.press("ArrowRight");
 		await expect(viewer.locator(".moment-viewer__counter")).toHaveText("2 / 3");
@@ -117,7 +117,7 @@ test.describe("动态页", () => {
 		const focused = await page.evaluate(() =>
 			document.activeElement?.getAttribute("aria-label"),
 		);
-		expect(focused).toBe("Open image 1: Lovely girl wallpaper one");
+		expect(focused).toBe("打开图片 1: 可爱少女壁纸 1");
 	});
 
 	test("多图切换期间保持主舞台和卡片布局稳定", async ({ page }) => {
@@ -134,7 +134,7 @@ test.describe("动态页", () => {
 		);
 
 		const card = page.locator(".moment-card").filter({
-			hasText: "Went through my whole wallpaper library",
+			hasText: "坐在桌前把整个壁纸库翻了一遍",
 		});
 		await card.locator(".moment-card__tile").first().click();
 		const viewer = card.locator(".moment-viewer");
@@ -230,7 +230,7 @@ test.describe("动态页", () => {
 
 	test("使用站点统一的页面视觉结构", async ({ page }) => {
 		await expect(page.locator(".page-header")).toHaveCount(1);
-		await expect(page.locator(".page-header__title")).toHaveText("Moments");
+		await expect(page.locator(".page-header__title")).toHaveText("动态");
 		await expect(page.locator(".page-header__icon svg")).toHaveCount(1);
 		// 官方 Chips 原子（filter 形态）承担标签筛选
 		await expect(
@@ -248,12 +248,12 @@ test.describe("动态页", () => {
 	});
 
 	test("筛选状态同步到 URL（?q= / ?tag=）", async ({ page }) => {
-		await page.locator(".moment-section__search input").fill("scenery");
+		await page.locator(".moment-section__search input").fill("风景");
 		await expect(page).toHaveURL(/[?&]q=/);
-		expect(new URL(page.url()).searchParams.get("q")).toBe("scenery");
-		await page.getByRole("button", { name: "wallpaper", exact: true }).click();
+		expect(new URL(page.url()).searchParams.get("q")).toBe("风景");
+		await page.getByRole("button", { name: "壁纸", exact: true }).click();
 		await expect(page).toHaveURL(/[?&]tag=/);
-		expect(new URL(page.url()).searchParams.get("tag")).toBe("wallpaper");
+		expect(new URL(page.url()).searchParams.get("tag")).toBe("壁纸");
 		await page.locator(".moment-section__search input").fill("");
 		await expect(page).toHaveURL(/[?&]tag=/);
 	});
@@ -262,7 +262,7 @@ test.describe("动态页", () => {
 		page,
 	}) => {
 		const tagFilter = page.getByRole("button", {
-			name: "wallpaper",
+			name: "壁纸",
 			exact: true,
 		});
 		await tagFilter.click();
@@ -270,7 +270,7 @@ test.describe("动态页", () => {
 		// 三篇带「wallpaper」标签：三张少女、七张少女、风景四张
 		await expect(page.locator(".moment-card")).toHaveCount(3);
 		await expect(page.locator(".moment-card").first()).toContainText(
-			"Three new wallpapers",
+			"新收三张壁纸",
 		);
 		await tagFilter.click();
 		await expect(page.locator(".moment-card")).toHaveCount(MOMENT_COUNT);
@@ -314,7 +314,7 @@ test.describe("动态页", () => {
 			debugWindow.__momentPhaseObserver = observer;
 		});
 
-		await page.getByRole("button", { name: "wallpaper", exact: true }).click();
+		await page.getByRole("button", { name: "壁纸", exact: true }).click();
 		const loading = page.locator(".moment-section__loading");
 		await expect(loading).toHaveCount(0);
 		await expect(page.locator(".moment-card")).toHaveCount(3);
@@ -347,14 +347,14 @@ test.describe("动态页", () => {
 	});
 
 	test("搜索过滤 + 空态", async ({ page }) => {
-		await page.locator(".moment-section__search input").fill("scenery");
+		await page.locator(".moment-section__search input").fill("风景");
 		await expect(page.locator(".moment-card")).toHaveCount(1);
 		// 单条结果不显示计数（结果不言自明）
 		await expect(page.locator(".moment-section__count")).toHaveCount(0);
 		await page.locator(".moment-section__search input").fill("no such moment");
 		await expect(page.locator(".moment-section__empty")).toBeVisible();
 		await expect(page.locator(".moment-section__empty")).toContainText(
-			"No moments matched your filters",
+			"没有符合条件的动态",
 		);
 	});
 

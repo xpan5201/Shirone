@@ -52,12 +52,12 @@ describe("Feature Data & Resolver Tests", () => {
 			enable: true,
 			categories: [],
 			order: "asc",
-			disabledTitles: ["Senior Frontend Engineer"],
+			disabledTitles: ["高级前端工程师"],
 		};
 		const resolved = resolveTimelineData(config);
-		assert.ok(!resolved.some((t) => t.title === "Senior Frontend Engineer"));
-		// timelineData 中最旧的条目是 2020.09 – 2024.06 (Computer Science & Engineering Degree)
-		assert.equal(resolved[0].title, "Computer Science & Engineering Degree");
+		assert.ok(!resolved.some((t) => t.title === "高级前端工程师"));
+		// timelineData 中最旧的条目是 2020.09 – 2024.06（计算机科学与工程学位）
+		assert.equal(resolved[0].title, "计算机科学与工程学位");
 	});
 
 	it("resolveTimelineData sorts correctly by date in desc and asc order", () => {

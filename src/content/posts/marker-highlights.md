@@ -1,32 +1,32 @@
 ---
-title: Markdown Marker Highlights
+title: Markdown 标记高亮
 published: 2026-08-28
-description: Highlight key phrases with token-driven marker syntax in Shirone Markdown.
-tags: [Demo, Markdown, Typography, Shirone]
-category: Guides
+description: 用 token 驱动的标记语法在 Shirone Markdown 中高亮关键短语。
+tags: [演示, Markdown, 排版, Shirone]
+category: 指南
 lang: en
 draft: false
 ---
 
-Marker highlights bring attention to a specific phrase without turning the surrounding paragraph into a separate component. They render as native `<mark>` elements during the build and inherit the active M3E color system.
+标记高亮把注意力引向某个具体短语，而不会把所在段落变成独立组件。它们在构建时渲染为原生 `<mark>` 元素，并继承当前的 M3E 配色体系。
 
-## Default emphasis
+## 默认强调
 
-Use `==text==` when the article's primary color should carry the emphasis. This is useful for ==one decision that readers should retain== while they continue through an ordinary paragraph.
+当文章的主色应当承载强调时，使用 `==text==`。适合在一段普通文字中，为 ==读者应当记住的一个决定== 加亮。
 
-The marker may contain ==nested **Markdown emphasis**== when the phrase needs a stronger hierarchy.
+当短语需要更强的层级时，标记内可以包含 ==嵌套的 **Markdown 强调**==。
 
-## Semantic colors
+## 语义颜色
 
-Use a suffix when the meaning needs a different tonal role. The available variants are `primary`, `secondary`, `tertiary`, `error`, and `tip`.
+当含义需要不同的色调角色时，追加后缀。可用的变体有 `primary`、`secondary`、`tertiary`、`error` 与 `tip`。
 
-- ==Primary connects the phrase to the active theme=={.primary}
-- ==Secondary keeps a supporting distinction quiet=={.secondary}
-- ==Tertiary adds a separate editorial signal=={.tertiary}
-- ==Error identifies a condition that needs correction=={.error}
-- ==Tip highlights practical guidance=={.tip}
+- ==主要色把短语与当前主题相连=={.primary}
+- ==次要色保持辅助性区分的低调=={.secondary}
+- ==第三色添加独立的编辑信号=={.tertiary}
+- ==错误色标识需要修正的状况=={.error}
+- ==提示色突出实用指引=={.tip}
 
-## Author syntax
+## 作者语法
 
 ```markdown
 ==Primary marker==
@@ -37,4 +37,4 @@ Use a suffix when the meaning needs a different tonal role. The available varian
 ==Tip marker=={.tip}
 ```
 
-Inline code such as `==literal marker syntax==` and fenced examples stay literal, so documentation can explain the syntax without triggering it.
+像 `==literal marker syntax==` 这样的行内代码与围栏示例保持字面量，因此文档可以说明该语法而不触发它。

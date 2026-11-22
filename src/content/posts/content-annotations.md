@@ -1,18 +1,18 @@
 ---
-title: Content Annotations
+title: 正文批注
 published: 2026-08-27
-description: Add compact, accessible supporting notes to Shirone articles without interrupting the reading flow.
-tags: [Demo, Markdown, Annotation, Shirone]
-category: Guides
+description: 为 Shirone 文章添加紧凑、无障碍的辅助注记，且不打断阅读流。
+tags: [演示, Markdown, 批注, Shirone]
+category: 指南
 lang: en
 draft: false
 ---
 
-Content annotations keep supporting context close to a sentence without placing it directly in the reading flow. Activate the small note marker to reveal its content.
+正文批注让辅助性上下文紧贴某一句，而不直接插入阅读流中。激活小注记标记即可展开其内容。
 
-## Basic syntax
+## 基本语法
 
-Add a `[+label]` reference in ordinary prose, then define the matching note elsewhere in the same article.
+在普通正文中加入 `[+label]` 引用，然后在同一篇文章的其他位置定义对应的注记。
 
 ```markdown
 Astro renders most of a page ahead of time and hydrates **interactive islands** [+islands] only when they need to become interactive.
@@ -21,30 +21,30 @@ Astro renders most of a page ahead of time and hydrates **interactive islands** 
   An island is an interactive UI component surrounded by static HTML. This keeps the default page lightweight while preserving focused interactivity.
 ```
 
-Astro renders most of a page ahead of time and hydrates **interactive islands** [+islands] only when they need to become interactive.
+Astro 会提前渲染页面的绝大部分内容，仅在需要交互时才对 **交互式岛屿** [+islands] 进行水合。
 
 [+islands]:
-  An island is an interactive UI component surrounded by static HTML. This keeps the default page lightweight while preserving focused interactivity.
+  岛屿是由静态 HTML 包围的交互式 UI 组件。这样既保持了默认页面的轻量，又保留了聚焦的交互能力。
 
-## Rich content
+## 富内容
 
-Definitions may contain paragraphs, emphasis, links, lists, and inline code [+rich-note] while the surrounding sentence continues normally.
+定义中可包含段落、强调、链接、列表与行内代码 [+rich-note]，而周围的句子照常继续。
 
 [+rich-note]:
-  **Authoring guidance**
+  **写作指引**
 
-  - Keep the first sentence self-contained.
-  - Use a link when readers may need the primary source.
-  - Prefer concise examples such as `client:visible`.
+  - 首句应能独立成意。
+  - 读者可能需要原始出处时，请附上链接。
+  - 优先给出简洁示例，例如 `client:visible`。
 
-  See the [Astro islands documentation](https://docs.astro.build/en/concepts/islands/) for the full model.
+  完整的模型说明见 [Astro 岛屿文档](https://docs.astro.build/en/concepts/islands/)。
 
-## Multiple definitions
+## 多条定义
 
-Reuse a label [+review] to present a short sequence of related notes behind one marker.
+复用同一个标签 [+review]，即可在一个标记后呈现一组简短的相关注记。
 
-[+review]: Start with the decision that changes the reader's next action.
-[+review]: Keep implementation evidence separate from background context.
-[+review]: Remove details that belong in the main article instead of the annotation.
+[+review]: 先给出会改变读者下一步动作的结论。
+[+review]: 把实现证据与背景信息分开。
+[+review]: 删除属于正文而非批注的细节。
 
-Undefined references such as `[+missing]` remain ordinary text, so an unfinished definition never creates an empty control.
+未定义的引用（例如 `[+missing]`）会保持为普通文本，因此未完成的定义绝不会生成空控件。

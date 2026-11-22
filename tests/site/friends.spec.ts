@@ -33,7 +33,7 @@ test.describe("友链页", () => {
 	test("使用站点统一的友链视觉结构", async ({ page }) => {
 		// PageHeader 封装的大标题（带装饰图标）
 		await expect(page.locator(".page-header")).toHaveCount(1);
-		await expect(page.locator(".page-header__title")).toHaveText("Friends");
+		await expect(page.locator(".page-header__title")).toHaveText("友链");
 		await expect(page.locator(".page-header__icon svg")).toHaveCount(1);
 		// PostCard 式箭头（chevron，hover 右滑）
 		await expect(page.locator(".friend-card__arrow")).toHaveCount(FRIEND_COUNT);

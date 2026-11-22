@@ -56,7 +56,7 @@ test.describe("Feed and Subscription System", () => {
 		const rssFooterLink = page.locator('footer a:has-text("RSS")').first();
 		const atomFooterLink = page.locator('footer a:has-text("Atom")').first();
 		const sitemapFooterLink = page
-			.locator('footer a:has-text("Sitemap")')
+			.locator('footer a:has-text("站点地图")')
 			.first();
 
 		await expect(rssFooterLink).toBeVisible();
@@ -82,7 +82,7 @@ test.describe("Feed and Subscription System", () => {
 		);
 		await expect(
 			page
-				.locator('a:has-text("View Raw XML"), a:has-text("查看原始 XML")')
+				.locator('a:has-text("查看原始 XML"), a:has-text("查看原始 XML")')
 				.first(),
 		).toBeVisible();
 

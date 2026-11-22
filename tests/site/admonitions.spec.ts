@@ -37,7 +37,7 @@ test.describe("Markdown admonitions", () => {
 		]);
 
 		const note = admonitions.filter({
-			has: page.getByText("Deployment context"),
+			has: page.getByText("部署上下文"),
 		});
 		const geometry = await note.evaluate((element) => {
 			const style = getComputedStyle(element);

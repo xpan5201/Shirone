@@ -30,7 +30,7 @@ export interface PersistentShellSyncCase {
 }
 
 /** Sidebar widgets every feature page is expected to show. */
-const EXPECTED_WIDGETS = ["categories", "tags"];
+const EXPECTED_WIDGETS = ["个分类", "个标签"];
 
 export function registerPersistentShellSync(
 	title: string,
@@ -38,7 +38,7 @@ export function registerPersistentShellSync(
 ): void {
 	test(title, async ({ page }) => {
 		await page.goto(testCase.fromPath, { waitUntil: "domcontentloaded" });
-		await page.getByRole("button", { name: "More", exact: true }).click();
+		await page.getByRole("button", { name: "更多", exact: true }).click();
 		await page.locator(`a[data-nav-key="${testCase.key}"]`).click();
 
 		await expect(page).toHaveURL(testCase.toPath);

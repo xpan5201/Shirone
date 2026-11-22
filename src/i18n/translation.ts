@@ -45,7 +45,22 @@ export function getTranslation(lang: string): Translation {
 	return map[lang.toLowerCase()] || defaultTranslation;
 }
 
-export function i18n(key: I18nKey): string {
+export type I18nParams = Readonly<Record<string, string | number>>;
+
+/**
+ * 统一占位符插值：把 `{name}` 换成 params.name。
+ * 未提供 params 时原样返回，保证既有调用行为不变；
+ * 占位符名在各语种保持一致（见 src/i18n/AGENTS.md）。
+ */
+function interpolate(text: string, params?: I18nParams): string {
+	if (!params) return text;
+	return text.replace(/\{(\w+)\}/g, (raw, name: string) => {
+		const value = params[name];
+		return value === undefined ? raw : String(value);
+	});
+}
+
+export function i18n(key: I18nKey, params?: I18nParams): string {
 	const lang = (siteConfig.lang || "en").toLowerCase();
 
 	// 1. 查找用户自定义 i18n 覆盖域（支持原大小写及小写匹配，如 zh_CN / zh_cn）
@@ -57,11 +72,11 @@ export function i18n(key: I18nKey): string {
 		if (langOverrides && typeof langOverrides === "object") {
 			const customVal = langOverrides[key];
 			if (typeof customVal === "string") {
-				return customVal;
+				return interpolate(customVal, params);
 			}
 		}
 	}
 
 	// 2. 回退到内置 10 语言词典
-	return getTranslation(lang)[key];
+	return interpolate(getTranslation(lang)[key], params);
 }

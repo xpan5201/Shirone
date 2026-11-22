@@ -1,6 +1,6 @@
-## Included API
+## 被包含的 API
 
-This paragraph is expanded from a neighboring Markdown file.
+这一段是从相邻的 Markdown 文件里展开出来的。
 
 <!-- #region public-api -->
 ```ts
@@ -10,4 +10,4 @@ export function greet(name: string) {
 ```
 <!-- #endregion public-api -->
 
-This line is outside the named region.
+这一行在命名区域之外。

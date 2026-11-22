@@ -91,7 +91,7 @@ test.describe("Markdown option groups", () => {
 		await optionTabs.nth(4).click();
 		await expect(manyOptions).toHaveAttribute(
 			"data-active-value",
-			"Offline recovery workflow",
+			"离线恢复流程",
 		);
 
 		const results = await new AxeBuilder({ page })

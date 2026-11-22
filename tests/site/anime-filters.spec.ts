@@ -7,7 +7,7 @@ test("anime filters wrap whole chips and move the count below on narrow columns"
 	await page.goto("/anime/?status=completed");
 	await expect(
 		page.locator(".anime-section__chips [aria-pressed='true']"),
-	).toHaveText("Completed");
+	).toHaveText("看完");
 	await page.waitForFunction(() =>
 		getComputedStyle(document.documentElement)
 			.getPropertyValue("--mc-primary")

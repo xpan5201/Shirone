@@ -6,10 +6,12 @@
  * 菜单按钮点击派发 site-drawer:toggle 事件，由 SiteNavigationDrawer 监听开合。
  */
 import IconButton from "@components/atoms/action/IconButton.svelte";
+import RegionSwitch from "@components/molecules/RegionSwitch.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { resolveNavBarLinks, resolvePageKey } from "@utils/nav-utils";
+import { resolveRegionSwitchViewModel } from "@utils/region-switch";
 import { url } from "@utils/url-utils";
 import { siteConfig } from "@/config";
 import { navBarConfig } from "@/config/navBarConfig";
@@ -20,6 +22,7 @@ import Search from "./Search.svelte";
 const className = Astro.props.class;
 const links = resolveNavBarLinks(navBarConfig.links);
 const currentPageKey = resolvePageKey(Astro.url);
+const regionSwitch = resolveRegionSwitchViewModel();
 
 function hrefFor(path?: string) {
 	return path ? url(path) : undefined;
@@ -87,6 +90,16 @@ function isActive(link: (typeof links)[number]): boolean {
 			})}
 		</nav>
 		<div class="flex-1"></div>
+		{regionSwitch.enable && regionSwitch.currentItem && regionSwitch.targetItem && (
+			<RegionSwitch
+				variant="topbar"
+				items={regionSwitch.items}
+				currentItem={regionSwitch.currentItem}
+				targetItem={regionSwitch.targetItem}
+				groupLabel={regionSwitch.groupLabel}
+				switchTitle={regionSwitch.switchTitle}
+			/>
+		)}
 		<Search client:only="svelte"></Search>
 		{!siteConfig.themeColor.fixed && (
 			<IconButton id="display-settings-switch" label={i18n(I18nKey.displaySettings)} class="shrink-0">

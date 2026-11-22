@@ -58,12 +58,12 @@ test.describe("受保护相册", () => {
 			waitUntil: "domcontentloaded",
 		});
 
-		const input = page.getByRole("textbox", { name: "Password" });
-		const submit = page.getByRole("button", { name: "Unlock album" });
-		const visibility = page.getByRole("button", { name: "Show password" });
+		const input = page.getByRole("textbox", { name: "访问密码" });
+		const submit = page.getByRole("button", { name: "解锁相册" });
+		const visibility = page.getByRole("button", { name: "显示密码" });
 
 		await expect(
-			page.getByRole("heading", { name: "This album is protected" }),
+			page.getByRole("heading", { name: "这是一个受保护相册" }),
 		).toBeVisible();
 		await expect(page.getByText("Six digits", { exact: true })).toBeVisible();
 		await expect(input).toHaveAttribute("type", "password");
@@ -72,22 +72,22 @@ test.describe("受保护相册", () => {
 		await visibility.click();
 		await expect(input).toHaveAttribute("type", "text");
 		await expect(
-			page.getByRole("button", { name: "Hide password" }),
+			page.getByRole("button", { name: "隐藏密码" }),
 		).toBeVisible();
 
 		await submit.click();
 		await expect(
-			page.getByText("Enter a password", { exact: true }),
+			page.getByText("请输入密码", { exact: true }),
 		).toBeVisible();
 		await expect(input).toHaveAttribute("aria-invalid", "true");
 
 		await input.fill("000000");
 		await expect(
-			page.getByText("Enter a password", { exact: true }),
+			page.getByText("请输入密码", { exact: true }),
 		).toBeHidden();
 		await submit.click();
 		await expect(
-			page.getByText("That password could not unlock this album", {
+			page.getByText("密码无法解锁这个相册", {
 				exact: true,
 			}),
 		).toBeVisible();

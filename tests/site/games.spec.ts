@@ -12,9 +12,9 @@ test.describe("游戏展示页", () => {
 	test("渲染页面标题、游戏卡片与评分/时长/状态信息", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"games",
+			"款游戏",
 		);
-		await expect(page.locator(".page-header__title")).toHaveText("Games");
+		await expect(page.locator(".page-header__title")).toHaveText("游戏");
 		await expect(page.locator(".games-section__count")).toHaveText("2 games");
 
 		const minecraft = page.locator('[data-game="minecraft"]');
@@ -23,7 +23,7 @@ test.describe("游戏展示页", () => {
 			"Mojang Studios",
 		);
 		await expect(minecraft.locator('[data-status="playing"]')).toContainText(
-			"Playing",
+			"正在游玩",
 		);
 		await expect(minecraft.locator(".game-card__rating")).toContainText("5.0");
 		await expect(minecraft.locator(".game-card__hours")).toContainText(
@@ -36,13 +36,13 @@ test.describe("游戏展示页", () => {
 		);
 		await expect(minecraft).not.toHaveClass(/game-card--featured/);
 		await expect(
-			minecraft.getByRole("link", { name: "Store page" }),
+			minecraft.getByRole("link", { name: "商店页面" }),
 		).toHaveAttribute("href", "https://www.minecraft.net/");
 
 		// 精选卡：徽标与横屏封面主视觉
 		const nte = page.locator('[data-game="nte-neverness-to-everness"]');
 		await expect(nte).toHaveClass(/game-card--featured/);
-		await expect(nte.locator(".game-card__featured")).toContainText("Featured");
+		await expect(nte.locator(".game-card__featured")).toContainText("主力推荐");
 		await expect(nte.locator(".game-card__cover")).toBeVisible();
 	});
 
@@ -86,7 +86,7 @@ test.describe("游戏展示页", () => {
 		await searchInput.fill("Unknown9999");
 		await expect(page.locator(".game-card")).toHaveCount(0);
 		await expect(page.locator(".games-section__empty")).toContainText(
-			"No games matched your filters",
+			"没有找到匹配的游戏",
 		);
 	});
 
@@ -125,7 +125,7 @@ test.describe("游戏展示页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "games",
+		key: "款游戏",
 		fromPath: "/skills/",
 		toPath: /\/games\/$/,
 		cardSelector: "game-card",

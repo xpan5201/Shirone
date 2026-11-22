@@ -154,14 +154,14 @@ test.describe("banner wallpaper", () => {
 			reducedMotion: false,
 		};
 		expect(resolveBannerState({ ...base, page: "home" }).copyMode).toBe("home");
-		expect(resolveBannerState({ ...base, page: "post" }).copyMode).toBe(
+		expect(resolveBannerState({ ...base, page: "篇文章" }).copyMode).toBe(
 			"context",
 		);
 		expect(resolveBannerState({ ...base, page: "notFound" }).copyMode).toBe(
 			"context",
 		);
 		expect(
-			resolveBannerState({ ...base, viewport: "mobile", page: "post" })
+			resolveBannerState({ ...base, viewport: "mobile", page: "篇文章" })
 				.copyMode,
 		).toBeNull();
 	});
@@ -173,9 +173,9 @@ test.describe("banner wallpaper", () => {
 		expect(response.ok()).toBe(true);
 		const html = await response.text();
 		expect(html).toContain("data-banner-context-title");
-		expect(html).toContain("Shirone Authoring & Usage Guide");
+		expect(html).toContain("Shirone 写作与使用指南");
 		expect(html).toContain(
-			"A comprehensive guide to post authoring, frontmatter schema, Markdown extensions, encryption, and media in Shirone.",
+			"Shirone 中文章写作、frontmatter 结构、Markdown 扩展、加密与媒体资源的完整指南。",
 		);
 		expect(html).toContain('datetime="2026-08-26"');
 	});
@@ -191,12 +191,12 @@ test.describe("banner wallpaper", () => {
 		await expect(stage).toHaveAttribute("data-copy-mode", "context");
 		await expect(context).toBeVisible();
 		await expect(context.locator("[data-banner-context-title]")).toHaveText(
-			"Shirone Authoring & Usage Guide",
+			"Shirone 写作与使用指南",
 		);
 		await expect(
 			context.locator("[data-banner-context-description]"),
 		).toHaveText(
-			"A comprehensive guide to post authoring, frontmatter schema, Markdown extensions, encryption, and media in Shirone.",
+			"Shirone 中文章写作、frontmatter 结构、Markdown 扩展、加密与媒体资源的完整指南。",
 		);
 		await expect(context.locator("time")).toHaveAttribute(
 			"datetime",
@@ -280,12 +280,12 @@ test.describe("banner wallpaper", () => {
 		await waitForBannerState(page, true);
 		const context = page.locator("[data-banner-context]");
 		await expect(context.locator("[data-banner-context-title]")).toHaveText(
-			"Friends",
+			"友链",
 		);
 		await expect(
 			context.locator("[data-banner-context-description]"),
 		).toHaveText(
-			"Link exchange is welcome — see the About page for how to apply.",
+			"欢迎交换友链，申请方式见「关于」页。",
 		);
 		await expect(context.locator("[data-banner-context-meta]")).toBeHidden();
 	});
@@ -296,7 +296,7 @@ test.describe("banner wallpaper", () => {
 		await page.goto("/archive/", { waitUntil: "domcontentloaded" });
 		await waitForBannerState(page, true);
 		await expect(page.locator("[data-banner-context-title]")).toHaveText(
-			"Archive",
+			"归档",
 		);
 		await expect(page.locator("[data-banner-context-description]")).toHaveText(
 			/^\d+ posts$/,
@@ -305,7 +305,7 @@ test.describe("banner wallpaper", () => {
 		await page.goto("/about/", { waitUntil: "domcontentloaded" });
 		await waitForBannerState(page, true);
 		await expect(page.locator("[data-banner-context-title]")).toHaveText(
-			"About",
+			"关于",
 		);
 		await expect(page.locator("[data-banner-context-details]")).toBeHidden();
 	});
@@ -402,7 +402,7 @@ test.describe("banner wallpaper", () => {
 
 		await page.goto("/", { waitUntil: "domcontentloaded" });
 		await waitForBannerState(page, true);
-		await expect(page.locator("#banner-wrapper h1")).toHaveText("Shirone");
+		await expect(page.locator("#banner-wrapper h1")).toHaveText("优纪互联");
 		await expectSubtitleTyping(page);
 		await expect(page.locator("#navbar")).toHaveClass(
 			/top-app-bar--transparent/,
@@ -515,7 +515,7 @@ test.describe("banner wallpaper", () => {
 		await page.goto("/", { waitUntil: "domcontentloaded" });
 		await waitForBannerState(page, true);
 		await page.locator("#display-settings-switch").click();
-		await page.getByText("Solid", { exact: true }).click();
+		await page.getByText("纯色", { exact: true }).click();
 		await waitForBannerState(page, false);
 		expect(
 			await page.evaluate(() => localStorage.getItem("wallpaper-mode")),
@@ -525,7 +525,7 @@ test.describe("banner wallpaper", () => {
 		await page.reload({ waitUntil: "domcontentloaded" });
 		await waitForBannerState(page, false);
 		await page.locator("#display-settings-switch").click();
-		await page.getByText("Banner", { exact: true }).click();
+		await page.getByText("横幅", { exact: true }).click();
 		await waitForBannerState(page, true);
 	});
 
@@ -683,14 +683,14 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"post",
+				"篇文章",
 		);
 		await expect(page.locator("[data-banner-context-title]")).toHaveText(
-			"Shirone Authoring & Usage Guide",
+			"Shirone 写作与使用指南",
 		);
 		await expect(page.locator("#banner-wrapper")).toHaveAttribute(
 			"aria-label",
-			"Shirone Authoring & Usage Guide",
+			"Shirone 写作与使用指南",
 		);
 		expect(
 			await page.evaluate(
@@ -704,13 +704,13 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"friends",
+				"个友链",
 		);
 		await expect(page.locator("[data-banner-context-title]")).toHaveText(
-			"Friends",
+			"友链",
 		);
 		await expect(page.locator("[data-banner-context-description]")).toHaveText(
-			"Link exchange is welcome — see the About page for how to apply.",
+			"欢迎交换友链，申请方式见「关于」页。",
 		);
 		await expect(page.locator("[data-banner-context-meta]")).toBeHidden();
 		expect(
@@ -748,7 +748,7 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"friends",
+				"个友链",
 		);
 		await page.waitForFunction(() => {
 			const states =
@@ -793,7 +793,7 @@ test.describe("banner wallpaper", () => {
 			await page.waitForFunction(
 				() =>
 					document.getElementById("swup-container")?.dataset.currentPage ===
-					"friends",
+					"个友链",
 			);
 			await expect(page.locator("#banner-wrapper")).toHaveAttribute(
 				"data-context-motion",
@@ -820,7 +820,7 @@ test.describe("banner wallpaper", () => {
 		await page.waitForFunction(
 			() =>
 				document.getElementById("swup-container")?.dataset.currentPage ===
-				"post",
+				"篇文章",
 		);
 		await waitForBannerState(page, false);
 		await expect(page.locator(".banner-waves")).toHaveCount(1);

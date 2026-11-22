@@ -123,7 +123,7 @@ test.describe("Markdown interactive code trees", () => {
 		await expect(panels.nth(1)).toBeHidden();
 
 		// Keyboard navigation: Home key moves to first button
-		await page.keyboard.press("Home");
+		await page.keyboard.press("主页");
 		await expect(fileButtons.nth(0)).toBeFocused();
 		await expect(fileButtons.nth(0)).toHaveClass(
 			/\bm3-code-tree__file-btn--active\b/,

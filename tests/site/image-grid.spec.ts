@@ -110,7 +110,7 @@ test.describe("Markdown image grid gallery", () => {
 		await expect(first.locator(".image-grid__item")).toHaveCount(2);
 		// 无 title 时图注回退为 alt 文本
 		await expect(first.locator(".image-grid__caption").first()).toHaveText(
-			"Minimal syntax result: first image",
+			"最小语法结果：第一张图",
 		);
 
 		const firstImage = first.locator(".image-grid__link > img").first();
@@ -176,7 +176,7 @@ test.describe("Markdown image grid gallery", () => {
 		expect(parameterStyles.fit).toBe("cover");
 		await expect(
 			parameterGrid.locator(".image-grid__caption").first(),
-		).toHaveText("Landscape caption 1");
+		).toHaveText("横图说明 1");
 
 		// contain 填充透传（Layout and Cropping 的第二个网格，文章内第 5 个）
 		const containGrid = grids.nth(4);
@@ -192,7 +192,7 @@ test.describe("Markdown image grid gallery", () => {
 		).toHaveCSS("object-fit", "contain");
 
 		// columns=1 网格保持单列
-		const singleGrid = grids.filter({ hasText: "Single-column test image" });
+		const singleGrid = grids.filter({ hasText: "单列测试图" });
 		await expect(singleGrid).toHaveAttribute("data-columns", "1");
 
 		expect(
@@ -259,20 +259,20 @@ test.describe("Markdown image grid gallery", () => {
 		await expect(dialog.locator(".f-thumbs__slide")).toHaveCount(2);
 		await expect(
 			dialog.locator(".fancybox__slide.is-selected img:not(.is-clone)"),
-		).toHaveAttribute("alt", "Minimal syntax result: first image");
+		).toHaveAttribute("alt", "最小语法结果：第一张图");
 
 		await page.keyboard.press("PageDown");
 		await expect(dialog.locator(".f-counter")).toHaveText("2/2");
 		await expect(
 			dialog.locator(".fancybox__slide.is-selected img:not(.is-clone)"),
-		).toHaveAttribute("alt", "Minimal syntax result: second image");
+		).toHaveAttribute("alt", "最小语法结果：第二张图");
 
 		await page.keyboard.press("Escape");
 		await expect(dialog).toHaveCount(0);
 
 		// 另一网格从自己的分组第 1 张开始，互不串组
 		const landscapeGrid = grids.filter({
-			hasText: "16:9 test image one",
+			hasText: "16:9 测试图一",
 		});
 		await landscapeGrid.locator(".image-grid__link").nth(0).click();
 		const secondDialog = page.locator(".fancybox__container.is-ready");
@@ -281,7 +281,7 @@ test.describe("Markdown image grid gallery", () => {
 		await expect(secondDialog.locator(".f-thumbs__slide")).toHaveCount(3);
 		await expect(
 			secondDialog.locator(".fancybox__slide.is-selected img:not(.is-clone)"),
-		).toHaveAttribute("alt", "16:9 test image one");
+		).toHaveAttribute("alt", "16:9 测试图一");
 		await page.keyboard.press("Escape");
 		await expect(secondDialog).toHaveCount(0);
 	});

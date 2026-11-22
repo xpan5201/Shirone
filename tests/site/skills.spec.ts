@@ -13,15 +13,15 @@ test.describe("技能页", () => {
 	test("渲染配置技能与离散熟练度", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"skills",
+			"项技能",
 		);
-		await expect(page.locator(".page-header__title")).toHaveText("Skills");
+		await expect(page.locator(".page-header__title")).toHaveText("技能");
 		await expect(page.locator(".skills-section__count")).toHaveText(
 			"21 skills",
 		);
 
 		const typescript = page.locator(".skill-card", { hasText: "TypeScript" });
-		await expect(typescript).toContainText("Expert");
+		await expect(typescript).toContainText("精通");
 		await expect(typescript.getByRole("meter")).toHaveAttribute(
 			"aria-valuenow",
 			"4",
@@ -60,7 +60,7 @@ test.describe("技能页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "skills",
+		key: "项技能",
 		fromPath: "/games/",
 		toPath: /\/skills\/$/,
 		cardSelector: "skill-card",

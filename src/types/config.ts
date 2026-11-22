@@ -7,6 +7,48 @@ export type WallpaperMode = "banner" | "none";
 
 export type TopAppBarContentAlign = "left" | "center";
 
+export type RegionSwitchItem = {
+	/** 唯一标识（如 "cn" | "intl"） */
+	key: string;
+	/** 显示名称，支持 `$t:<I18nKey>` 引用或字面量 */
+	label: string;
+	/** 窄屏紧凑图标按钮的角标短码（如 "CN" | "INTL"） */
+	shortLabel: string;
+	/** 目标站点根地址（点击固定跳转到该站点首页） */
+	url: string;
+	/** 离线 Iconify 图标名（如 "material-symbols:bolt-rounded"） */
+	icon: string;
+};
+
+export type RegionSwitchConfig = {
+	/** 总开关：关闭或有效站点不足 2 个时零 DOM、零请求、零开销 */
+	enable: boolean;
+	/** 可选手动指定当前站点 key；省略时按 `siteConfig.site` 的 origin 自动匹配 */
+	current?: string;
+	/** 可切换的站点清单 */
+	items: RegionSwitchItem[];
+};
+
+export type ResolvedRegionSwitchItem = RegionSwitchItem & {
+	/** 规范化后的首页跳转链接 */
+	href: string;
+	/** 展示用主机名（如 "www.mintyuki.com"） */
+	host: string;
+	/** 是否为当前所在站点 */
+	active: boolean;
+};
+
+export type ResolvedRegionSwitchOptions = {
+	/** 实际生效开关（关闭或少于 2 个有效项时为 false） */
+	enable: boolean;
+	/** 解析后的站点列表 */
+	items: ResolvedRegionSwitchItem[];
+	/** 当前所在站点 */
+	currentItem?: ResolvedRegionSwitchItem;
+	/** 点击紧凑单按钮时切换的目标站点 */
+	targetItem?: ResolvedRegionSwitchItem;
+};
+
 export type DisplaySettingsConfig = {
 	/** 是否在显示设置面板展示配色风格（9 宫格）选择器（默认 true） */
 	colorStyle?: boolean;
@@ -86,6 +128,9 @@ export type SiteConfig = {
 		/** 桌面端标题与导航内容组的对齐方式。 */
 		contentAlign: TopAppBarContentAlign;
 	};
+
+	/** 国内/国际多站点线路切换配置（默认不配置即关闭，零开销） */
+	regionSwitch?: RegionSwitchConfig;
 
 	/** 显示设置浮层各切换项的前端可见性控制 */
 	displaySettings?: DisplaySettingsConfig;

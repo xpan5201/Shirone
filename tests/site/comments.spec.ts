@@ -55,9 +55,9 @@ async function mockTwikoo(page: Page) {
 										<div class="tk-avatar"></div>
 										<div class="tk-col">
 											<div class="tk-meta-input">
-												<div class="el-input el-input-group el-input-group--prepend"><div class="el-input-group__prepend">Nickname</div><input name="nick" placeholder="Required" class="el-input__inner"></div>
-												<div class="el-input el-input-group el-input-group--prepend"><div class="el-input-group__prepend">Email</div><input name="mail" type="email" placeholder="Required" class="el-input__inner"></div>
-												<div class="el-input el-input-group el-input-group--prepend"><div class="el-input-group__prepend">Website</div><input name="link" placeholder="Optional" class="el-input__inner"></div>
+												<div class="el-input el-input-group el-input-group--prepend"><div class="el-input-group__prepend">Nickname</div><input name="nick" placeholder="必填" class="el-input__inner"></div>
+												<div class="el-input el-input-group el-input-group--prepend"><div class="el-input-group__prepend">Email</div><input name="mail" type="email" placeholder="必填" class="el-input__inner"></div>
+												<div class="el-input el-input-group el-input-group--prepend"><div class="el-input-group__prepend">Website</div><input name="link" placeholder="可选" class="el-input__inner"></div>
 											</div>
 											<div class="tk-input el-textarea"><textarea class="el-textarea__inner" placeholder="" style="min-height:97px;height:97px"></textarea><span class="el-input__count">0/500</span></div>
 										</div>
@@ -125,7 +125,7 @@ async function mockGiscus(page: Page) {
 					}
 					const iframe = document.createElement('iframe');
 					iframe.className = 'giscus-frame giscus-frame--loading';
-					iframe.title = 'Comments';
+					iframe.title = '评论';
 					const params = new URLSearchParams();
 					for (const [key, value] of Object.entries(current.dataset)) {
 						params.set(key, value);

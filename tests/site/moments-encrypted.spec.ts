@@ -52,14 +52,14 @@ test.describe("encrypted moments", () => {
 
 		// Incorrect password keeps the gate and reports the error.
 		await gate.getByRole("textbox").fill("wrong-password");
-		await gate.getByRole("button", { name: "Unlock moment" }).click();
-		await expect(gate.getByText("Incorrect password")).toBeVisible();
+		await gate.getByRole("button", { name: "解锁动态" }).click();
+		await expect(gate.getByText("密码错误，请重新输入")).toBeVisible();
 		await expect(gate).toBeVisible();
 		await expect(card.locator(".moment-card__content")).toHaveCount(0);
 
 		// Correct password swaps in the normal card with body, gallery, location and tags.
 		await gate.getByRole("textbox").fill("shirone-probe");
-		await gate.getByRole("button", { name: "Unlock moment" }).click();
+		await gate.getByRole("button", { name: "解锁动态" }).click();
 		await expect(gate).toHaveCount(0);
 		await expect(card.locator(".moment-card__content")).toContainText(
 			"Encrypted probe body",

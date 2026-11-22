@@ -19,27 +19,27 @@ export const timelineConfig: TimelineConfig = withUserConfig("timeline", {
 	categories: [
 		{
 			key: "milestone",
-			label: "Milestones",
+			label: "$t:timelineMilestone",
 			icon: "material-symbols:flag-rounded",
 		},
 		{
 			key: "project",
-			label: "Projects",
+			label: "$t:timelineProject",
 			icon: "material-symbols:code-rounded",
 		},
 		{
 			key: "career",
-			label: "Career",
+			label: "$t:timelineCareer",
 			icon: "material-symbols:work-rounded",
 		},
 		{
 			key: "education",
-			label: "Education",
+			label: "$t:timelineEducation",
 			icon: "material-symbols:school-rounded",
 		},
 		{
 			key: "life",
-			label: "Life",
+			label: "$t:timelineLife",
 			icon: "material-symbols:favorite-rounded",
 		},
 	],

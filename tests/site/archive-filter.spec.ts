@@ -2,13 +2,13 @@ import { expect, test } from "@playwright/test";
 
 test.describe("archive filter breadcrumb", () => {
 	test("uses concise breadcrumb semantics", async ({ page }) => {
-		await page.goto("/archive/?category=Examples");
-		const crumb = page.getByRole("navigation", { name: "Breadcrumb" });
+		await page.goto("/archive/?category=%E7%A4%BA%E4%BE%8B");
+		const crumb = page.getByRole("navigation", { name: "面包屑导航" });
 		await expect(crumb.locator("ol > li")).toHaveCount(3);
 		await expect(
-			crumb.getByRole("link", { name: "Categories" }),
+			crumb.getByRole("link", { name: "分类" }),
 		).toHaveAttribute("href", "/categories/");
-		await expect(crumb.locator('[aria-current="page"]')).toHaveText("Examples");
+		await expect(crumb.locator('[aria-current="page"]')).toHaveText("示例");
 		await expect(crumb.locator(".archive-panel__crumb-count")).toHaveCount(0);
 	});
 
@@ -16,15 +16,15 @@ test.describe("archive filter breadcrumb", () => {
 		request,
 		page,
 	}) => {
-		const response = await request.get("/archive/?category=Examples");
+		const response = await request.get("/archive/?category=%E7%A4%BA%E4%BE%8B");
 		expect(response.ok()).toBe(true);
 		const html = await response.text();
 		expect(html).toContain("archive-panel");
 		expect(html).toContain("m3-blog-archive__group");
 
-		await page.goto("/archive/?category=Examples");
+		await page.goto("/archive/?category=%E7%A4%BA%E4%BE%8B");
 		await expect(
-			page.getByRole("navigation", { name: "Breadcrumb" }),
+			page.getByRole("navigation", { name: "面包屑导航" }),
 		).toBeVisible();
 		// Asserted by title rather than by a literal count. The Examples category
 		// gains posts as the theme documents features — `image-grid-demo` arrived
@@ -32,14 +32,14 @@ test.describe("archive filter breadcrumb", () => {
 		await expect(
 			page.locator(".m3-blog-archive__title-text"),
 		).toHaveText([
-			"Password Protection and Post Encryption Demo",
-			"Audio Reader: Japanese Anime Mystery Voices",
-			"Image Gallery Grid: Syntax and Complete Examples",
-			"Mermaid Diagram Gallery",
-			"Expressive Code Example",
-			"Markdown Example",
-			"Include Video in the Posts",
-			"Draft Example",
+			"密码保护与文章加密演示",
+			"音频阅读器：日式动画中的神秘语音",
+			"图片画廊网格：语法与完整示例",
+			"Mermaid 图表画廊",
+			"Expressive Code 示例",
+			"Markdown 示例",
+			"在文章中嵌入视频",
+			"草稿示例",
 		]);
 	});
 

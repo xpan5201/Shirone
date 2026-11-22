@@ -14,7 +14,7 @@ test.describe("分类索引页 /categories/", () => {
 	test("渲染页头与全部分类行（规格表：名称 + 计数 + 归档过滤链接）", async ({
 		page,
 	}) => {
-		await expect(page.locator(".page-header__title")).toHaveText("Categories");
+		await expect(page.locator(".page-header__title")).toHaveText("分类");
 		// 页头装饰图标：SSR 直出（astro-icon 构建期内联，非空）
 		await expect(page.locator(".page-header__icon svg")).toHaveCount(1);
 		await expect(
@@ -23,12 +23,12 @@ test.describe("分类索引页 /categories/", () => {
 		const rows = page.locator(".category-index__row");
 		await expect(rows).toHaveCount(2);
 		const first = rows.first();
-		await expect(first.locator(".category-index__name")).toHaveText("Examples");
+		await expect(first.locator(".category-index__name")).toHaveText("示例");
 		// Cross-checked against the archive view rather than pinned: the category
 		// gains posts as features are documented, and this count is the same
 		// number `archive-filter.spec.ts` asserts by title.
 		await expect(first.locator(".category-index__count")).toHaveText("8");
-		await expect(first).toHaveAttribute("href", "/archive/?category=Examples");
+		await expect(first).toHaveAttribute("href", "/archive/?category=%E7%A4%BA%E4%BE%8B");
 		// 行内 MetaIcon 徽标（与 SiteStats 同视觉语言）
 		await expect(first.locator(".m3-meta-icon svg")).toHaveCount(1);
 		await expect(page.locator("#category-bar-region")).toBeHidden();
@@ -50,9 +50,9 @@ test.describe("分类索引页 /categories/", () => {
 	test("分类行可跳转到归档页对应过滤", async ({ page }) => {
 		await page
 			.locator(".category-index__row")
-			.filter({ hasText: "Guides" })
+			.filter({ hasText: "指南" })
 			.click();
-		await expect(page).toHaveURL(/[?&]category=Guides/);
+		await expect(page).toHaveURL(/[?&]category=%E6%8C%87%E5%8D%97/);
 		await expect(page.locator("#category-bar-region")).toBeVisible();
 		await expect(
 			page.locator('widget-layout[data-id="categories"]'),
@@ -78,7 +78,7 @@ test.describe("标签索引页 /tags/", () => {
 	test("渲染页头与全部标签 chip（名称 + 计数徽标 + 归档过滤链接）", async ({
 		page,
 	}) => {
-		await expect(page.locator(".page-header__title")).toHaveText("Tags");
+		await expect(page.locator(".page-header__title")).toHaveText("标签");
 		// 页头装饰图标：SSR 直出（astro-icon 构建期内联，非空）
 		await expect(page.locator(".page-header__icon svg")).toHaveCount(1);
 		await expect(
@@ -86,13 +86,13 @@ test.describe("标签索引页 /tags/", () => {
 		).toBeVisible();
 		const chips = page.locator(".tag-index__chip");
 		await expect(chips).toHaveCount(27);
-		const bloggingChip = chips.filter({ hasText: "Blogging" });
+		const bloggingChip = chips.filter({ hasText: "博客写作" });
 		await expect(bloggingChip).toBeVisible();
 		await expect(bloggingChip.locator(".tag-index__count")).toHaveText("4");
 		await expect(bloggingChip).toHaveAccessibleName("Blogging 4");
 		await expect(bloggingChip).toHaveAttribute(
 			"href",
-			"/archive/?tag=Blogging",
+			"/archive/?tag=%E5%8D%9A%E5%AE%A2%E5%86%99%E4%BD%9C",
 		);
 		await expect(page.locator("#category-bar-region")).toBeHidden();
 		await expect(
@@ -103,8 +103,8 @@ test.describe("标签索引页 /tags/", () => {
 	});
 
 	test("标签 chip 可跳转到归档页对应过滤", async ({ page }) => {
-		await page.locator(".tag-index__chip").filter({ hasText: "Video" }).click();
-		await expect(page).toHaveURL(/[?&]tag=Video/);
+		await page.locator(".tag-index__chip").filter({ hasText: "视频" }).click();
+		await expect(page).toHaveURL(/[?&]tag=%E8%A7%86%E9%A2%91/);
 	});
 });
 
@@ -118,7 +118,7 @@ test.describe("侧栏分类与标签入口", () => {
 		await expect(tagsWidget.locator(".expand-btn")).toHaveCount(0);
 		const indexLink = tagsWidget.locator('.widget-index-link a[href="/tags/"]');
 		await expect(indexLink).toHaveCount(1);
-		await expect(indexLink).toHaveText(/View all tags/);
+		await expect(indexLink).toHaveText(/查看全部标签/);
 		await expect(indexLink).toHaveCSS("justify-content", "center");
 		const [widgetBox, linkBox] = await Promise.all([
 			tagsWidget.boundingBox(),

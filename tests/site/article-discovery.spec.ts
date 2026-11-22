@@ -118,7 +118,7 @@ test.describe("article discovery utilities", () => {
 			current,
 			article("tag-match", { tags: ["astro"] }),
 			article("category-match", { category: "guides" }),
-			article("unrelated", { tags: ["Cooking"], category: "Life" }),
+			article("unrelated", { tags: ["Cooking"], category: "生活" }),
 		];
 
 		expect(

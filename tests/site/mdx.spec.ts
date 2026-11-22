@@ -87,7 +87,7 @@ test.describe("MDX Support and M3E Integration", () => {
 			"#content-wrapper [data-pagefind-meta='title']",
 		);
 		await expect(title).toContainText(
-			"MDX Integration and M3E Atomic Components",
+			"MDX 集成与 M3E 原子组件",
 		);
 
 		// 验证 M3E 展示型组件（纯 SSR 输出）

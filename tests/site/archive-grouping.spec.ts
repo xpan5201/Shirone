@@ -24,7 +24,7 @@ test.describe("archive grouping switch", () => {
 	) {
 		// SegmentedButton 的 input 是 sr-only 隐藏的，点击可见 label（原生转发到 input）
 		await page
-			.getByRole("group", { name: "Group archive by" })
+			.getByRole("group", { name: "归档分组" })
 			.getByText(name, { exact: true })
 			.click();
 	}
@@ -34,12 +34,12 @@ test.describe("archive grouping switch", () => {
 	}) => {
 		await openArchive(page);
 
-		const group = page.getByRole("group", { name: "Group archive by" });
+		const group = page.getByRole("group", { name: "归档分组" });
 		const radios = group.getByRole("radio");
 		await expect(radios).toHaveCount(3);
-		await expect(radios.nth(0)).toHaveAccessibleName("By Year");
-		await expect(radios.nth(1)).toHaveAccessibleName("By Category");
-		await expect(radios.nth(2)).toHaveAccessibleName("By Tag");
+		await expect(radios.nth(0)).toHaveAccessibleName("按年份");
+		await expect(radios.nth(1)).toHaveAccessibleName("按分类");
+		await expect(radios.nth(2)).toHaveAccessibleName("按标签");
 		await expect(radios.nth(0)).toBeChecked();
 		await expect(radios.nth(1)).not.toBeChecked();
 
@@ -52,10 +52,10 @@ test.describe("archive grouping switch", () => {
 	test("switches grouping to category with counts", async ({ page }) => {
 		await openArchive(page);
 
-		await selectGroup(page, "By Category");
+		await selectGroup(page, "按分类");
 		await expect(page.locator(".m3-blog-archive__group-title")).toHaveText([
-			"Examples",
-			"Guides",
+			"示例",
+			"指南",
 		]);
 		// Compare the rendered number against the rendered entries instead of
 		// building an expected string: the label is produced by the component's
@@ -83,58 +83,58 @@ test.describe("archive grouping switch", () => {
 	}) => {
 		await openArchive(page);
 
-		await selectGroup(page, "By Tag");
+		await selectGroup(page, "按标签");
 		const tagTitles = await page
 			.locator(".m3-blog-archive__group-title")
 			.allTextContents();
 		expect(tagTitles.length).toBe(27);
-		expect(tagTitles[0]).toBe("#Accessibility");
-		expect(tagTitles).toContain("#Blogging");
-		expect(tagTitles).toContain("#Guide");
+		expect(tagTitles[0]).toBe("#Fuwari");
+		expect(tagTitles).toContain("#博客写作");
+		expect(tagTitles).toContain("#指南");
 		expect(tagTitles).toContain("#Shirone");
 	});
 
 	test("arrow keys move selection within the radio group", async ({ page }) => {
 		await openArchive(page);
 
-		await page.getByRole("radio", { name: "By Year" }).focus();
+		await page.getByRole("radio", { name: "按年份" }).focus();
 		await page.keyboard.press("ArrowRight");
 		await expect(
-			page.getByRole("radio", { name: "By Category" }),
+			page.getByRole("radio", { name: "按分类" }),
 		).toBeChecked();
 		await page.keyboard.press("ArrowRight");
-		await expect(page.getByRole("radio", { name: "By Tag" })).toBeChecked();
+		await expect(page.getByRole("radio", { name: "按标签" })).toBeChecked();
 		await page.keyboard.press("ArrowLeft");
 		await expect(
-			page.getByRole("radio", { name: "By Category" }),
+			page.getByRole("radio", { name: "按分类" }),
 		).toBeChecked();
 	});
 
 	test("URL filter is a scoped browse view: switch hidden, breadcrumb shown", async ({
 		page,
 	}) => {
-		await openArchive(page, "/archive/?category=Examples");
+		await openArchive(page, "/archive/?category=%E7%A4%BA%E4%BE%8B");
 
 		// 筛选头保留
 		await expect(
-			page.getByRole("navigation", { name: "Breadcrumb" }),
+			page.getByRole("navigation", { name: "面包屑导航" }),
 		).toBeVisible();
 		// 带筛选参数时不渲染分组切换（定向浏览视图，分组控制无意义）
 		await expect(
-			page.getByRole("group", { name: "Group archive by" }),
+			page.getByRole("group", { name: "归档分组" }),
 		).toHaveCount(0);
 		// 直接呈现筛选后的年份时间轴。Asserted by title rather than count: the
 		// Examples category gains posts as features are documented, so a literal
 		// number drifts without any filter behaviour changing.
 		await expect(page.locator(".m3-blog-archive__title-text")).toHaveText([
-			"Password Protection and Post Encryption Demo",
-			"Audio Reader: Japanese Anime Mystery Voices",
-			"Image Gallery Grid: Syntax and Complete Examples",
-			"Mermaid Diagram Gallery",
-			"Expressive Code Example",
-			"Markdown Example",
-			"Include Video in the Posts",
-			"Draft Example",
+			"密码保护与文章加密演示",
+			"音频阅读器：日式动画中的神秘语音",
+			"图片画廊网格：语法与完整示例",
+			"Mermaid 图表画廊",
+			"Expressive Code 示例",
+			"Markdown 示例",
+			"在文章中嵌入视频",
+			"草稿示例",
 		]);
 		await expect(page.locator(".m3-blog-archive__group-title")).toHaveText([
 			"2026",
@@ -146,7 +146,7 @@ test.describe("archive grouping switch", () => {
 		// 回到无参数归档页：分组切换恢复
 		await openArchive(page);
 		await expect(
-			page.getByRole("group", { name: "Group archive by" }),
+			page.getByRole("group", { name: "归档分组" }),
 		).toBeVisible();
 	});
 });

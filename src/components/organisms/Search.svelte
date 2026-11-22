@@ -26,17 +26,16 @@ const fakeResult: SearchResult[] = [
 	{
 		url: url("/"),
 		meta: {
-			title: "This Is a Fake Search Result",
+			title: i18n(I18nKey.searchDevFakeTitle),
 		},
-		excerpt:
-			"Because the search cannot work in the <mark>dev</mark> environment.",
+		excerpt: i18n(I18nKey.searchDevFakeExcerpt),
 	},
 	{
 		url: url("/"),
 		meta: {
-			title: "If You Want to Test the Search",
+			title: i18n(I18nKey.searchDevTestTitle),
 		},
-		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
+		excerpt: i18n(I18nKey.searchDevTestHint),
 	},
 ];
 

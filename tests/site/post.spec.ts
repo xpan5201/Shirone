@@ -137,7 +137,7 @@ test.describe("Site post", () => {
 		const snackbar = page.locator(".m3-snackbar");
 		await expect(snackbar).toHaveClass(/visible/);
 		await expect(page.locator(".m3-snackbar__message")).toHaveText(
-			"Copied to clipboard",
+			"已复制到剪贴板",
 		);
 	});
 

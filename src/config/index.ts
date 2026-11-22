@@ -67,6 +67,7 @@ export {
 	getDefaultSpec,
 	getDefaultStyle,
 	resolveDisplaySettings,
+	resolveRegionSwitchOptions,
 	resolveTextureOptions,
 	siteConfig,
 } from "./siteConfig";

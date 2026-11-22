@@ -12,9 +12,9 @@ test.describe("项目页", () => {
 	test("渲染代表项目、阶段、技术栈与源码链接", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
-			"projects",
+			"个项目",
 		);
-		await expect(page.locator(".page-header__title")).toHaveText("Projects");
+		await expect(page.locator(".page-header__title")).toHaveText("项目");
 		await expect(page.locator(".projects-section__count")).toHaveText(
 			"3 projects",
 		);
@@ -27,13 +27,13 @@ test.describe("项目页", () => {
 		);
 		await expect(shirone).toHaveClass(/project-card--featured/);
 		await expect(shirone.locator('[data-phase="building"]')).toHaveText(
-			"Building",
+			"构建中",
 		);
 		await expect(shirone.locator(".project-card__technologies li")).toHaveCount(
 			4,
 		);
 		await expect(
-			shirone.getByRole("link", { name: "View source" }),
+			shirone.getByRole("link", { name: "查看源码" }),
 		).toHaveAttribute("href", "https://github.com/LyraVoid/Shirone");
 
 		// 无封面项目：渲染图标瓷砖形态（不渲染封面区）
@@ -41,20 +41,20 @@ test.describe("项目页", () => {
 		await expect(folkpatch.locator(".project-card__icon")).toBeVisible();
 		await expect(folkpatch.locator(".project-card__cover")).toHaveCount(0);
 		await expect(folkpatch.locator('[data-phase="building"]')).toHaveText(
-			"Building",
+			"构建中",
 		);
 		await expect(
-			folkpatch.getByRole("link", { name: "View source" }),
+			folkpatch.getByRole("link", { name: "查看源码" }),
 		).toHaveAttribute("href", "https://github.com/LyraVoid/FolkPatch");
 
 		const kernelpatch = page.locator('[data-project="kernelpatch"]');
 		await expect(kernelpatch.locator(".project-card__icon")).toBeVisible();
 		await expect(kernelpatch.locator(".project-card__cover")).toHaveCount(0);
 		await expect(kernelpatch.locator('[data-phase="shipped"]')).toHaveText(
-			"Shipped",
+			"已发布",
 		);
 		await expect(
-			kernelpatch.getByRole("link", { name: "View source" }),
+			kernelpatch.getByRole("link", { name: "查看源码" }),
 		).toHaveAttribute("href", "https://github.com/lyravoid/KernelPatch");
 	});
 
@@ -270,7 +270,7 @@ test.describe("项目页 Swup 导航", () => {
 	test.use({ viewport: { width: 1280, height: 900 } });
 
 	registerPersistentShellSync("从持久顶栏进入后同步页面、导航与侧栏状态", {
-		key: "projects",
+		key: "个项目",
 		fromPath: "/skills/",
 		toPath: /\/projects\/$/,
 		cardSelector: "project-card",
