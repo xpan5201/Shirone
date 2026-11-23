@@ -1,8 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { registerPersistentShellSync } from "./feature-page";
 
-const TOTAL_COUNT = 5;
-const MILESTONE_COUNT = 1;
+const TOTAL_COUNT = 1;
 
 test.describe("时间线页", () => {
 	test.beforeEach(async ({ page }) => {
@@ -10,7 +9,7 @@ test.describe("时间线页", () => {
 		await expect(page.locator(".timeline-card")).toHaveCount(TOTAL_COUNT);
 	});
 
-	test("渲染时间线事件与元数据", async ({ page }) => {
+	test("渲染建站里程碑节点与元数据", async ({ page }) => {
 		await expect(page.locator("#swup-container")).toHaveAttribute(
 			"data-current-page",
 			"timeline",
@@ -25,23 +24,16 @@ test.describe("时间线页", () => {
 		await expect(
 			featuredItem.locator(".timeline-card__featured-pill"),
 		).toBeVisible();
+		await expect(featuredItem.locator(".timeline-card__date")).toHaveText(
+			"2026.11.20",
+		);
 		await expect(featuredItem.locator(".timeline-card__title")).toContainText(
-			"Shirone 主题 M3E 架构大改版",
+			"「优纪互联」正式建站上线",
 		);
 	});
 
-	test("分类 chips 可筛选并再次点击恢复全部", async ({ page }) => {
-		const milestoneChip = page.getByRole("button", {
-			name: "里程碑",
-			exact: true,
-		});
-		await milestoneChip.click();
-		await expect(milestoneChip).toHaveAttribute("aria-pressed", "true");
-		await expect(page.locator(".timeline-card")).toHaveCount(MILESTONE_COUNT);
-
-		await milestoneChip.click();
-		await expect(milestoneChip).toHaveAttribute("aria-pressed", "false");
-		await expect(page.locator(".timeline-card")).toHaveCount(TOTAL_COUNT);
+	test("单分类时隐藏多余筛选 chips，避免无效交互", async ({ page }) => {
+		await expect(page.locator(".timeline-section__chips")).toHaveCount(0);
 	});
 
 	test("侧栏页面过滤与直接加载导航高亮正确", async ({ page }) => {

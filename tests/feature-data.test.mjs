@@ -48,16 +48,29 @@ describe("Feature Data & Resolver Tests", () => {
 	});
 
 	it("resolveTimelineData applies disabledTitles and order correctly", () => {
+		const sampleItems = [
+			{ title: "节点 A", date: "2026.11.20" },
+			{ title: "待隐藏节点", date: "2025.03 – 至今" },
+			{ title: "节点 B", date: "2024.06" },
+		];
 		const config = {
 			enable: true,
 			categories: [],
 			order: "asc",
-			disabledTitles: ["高级前端工程师"],
+			disabledTitles: ["待隐藏节点"],
 		};
-		const resolved = resolveTimelineData(config);
-		assert.ok(!resolved.some((t) => t.title === "高级前端工程师"));
-		// timelineData 中最旧的条目是 2020.09 – 2024.06（计算机科学与工程学位）
-		assert.equal(resolved[0].title, "计算机科学与工程学位");
+		const resolved = resolveTimelineData(config, sampleItems);
+		assert.deepEqual(
+			resolved.map((t) => t.title),
+			["节点 B", "节点 A"],
+		);
+
+		const defaultResolved = resolveTimelineData({
+			enable: true,
+			categories: [],
+		});
+		assert.ok(defaultResolved.length >= 1);
+		assert.ok(defaultResolved.every((item) => item.title && item.date));
 	});
 
 	it("resolveTimelineData sorts correctly by date in desc and asc order", () => {
